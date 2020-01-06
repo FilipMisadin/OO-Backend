@@ -16,4 +16,4 @@ WORKDIR /app
 COPY --from=publish /src/publish .
 # ENTRYPOINT ["dotnet", "Colors.API.dll"]
 # heroku uses the following
-CMD ASPNETCORE_URLS=http://*:$PORT dotnet OO-Backend.dll
+CMD ASPNETCORE_URLS=http://*:$PORT dotnet OO_Backend.dll

@@ -6,9 +6,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using JWTAuthDemo.Models;
+using OO_Backend.Models;
+using OO_Backend.Responses;
 
-namespace JWTAuthDemo.Controllers
+namespace OO_Backend.Controllers
 {
     [ApiController]
     [Authorize]
@@ -27,16 +28,19 @@ namespace JWTAuthDemo.Controllers
         [HttpGet]
         [Route("offerAds")]
         [AllowAnonymous]
-        public List<OfferServicesAdModel> GetAllOfferAds() => _database.GetOfferServicesAds();
-        
+        public List<OfferServicesAdModel> GetAllOfferAds() 
+        {
+            return GetOfferServicesAds();
+        }
+
         [HttpGet]
         [Route("offerAd/{id}")]
         [AllowAnonymous]
         public IActionResult GetOfferAd(long id)
         {
-            if (OfferServicesAdExists(id))
+            if (_database.OfferServicesAdExists(id))
             {
-                var offerAd = GetOfferAdFromDatabase(id);
+                var offerAd = _database.GetOfferServicesAd(id);
 
                 return Ok(offerAd);
             }
@@ -48,15 +52,15 @@ namespace JWTAuthDemo.Controllers
 
         [HttpPost]
         [Route("offerAd")]
-        public IActionResult AddOfferServicesAd([FromBody] OfferServicesAdModel offerAd)
+        public IActionResult AddOfferServicesAd([FromBody] OfferAdBodyModel offerAd)
         {
-            var ownerId = Convert.ToInt64(User.Identity.Name);
+            var ownerId = Convert.ToInt32(_database.GetUser(User.Identity.Name).Id);
 
             offerAd.UserId = ownerId;
 
             _logger.LogInformation("Add OfferAd for OfferAdId: {OfferAdId}", offerAd.Id);
-            _database.AddOfferServicesAd(offerAd);
-            return Ok(offerAd);
+            var offer = _database.AddOfferServicesAd(offerAd);
+            return Ok(offer);
         }
 
         // PUT: api/offerAd/5
@@ -64,23 +68,22 @@ namespace JWTAuthDemo.Controllers
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut]
         [Route("offerAd/{id}")]
-        public async Task<IActionResult> PutOfferAd(long id, OfferServicesAdModel offerAd)
+        public IActionResult PutOfferAd(long id, OfferAdBodyModel offerAd)
         {
             if (id != offerAd.Id)
             {
                 return BadRequest();
             }
 
-            if (IsOwner(offerAd.UserId))
+            if (_database.IsOwner(offerAd.UserId, User))
             {
-                _database.Entry(offerAd).State = EntityState.Modified;
                 try
                 {
-                    await _database.SaveChangesAsync();
+                    _database.UpdateOfferServicesAd(offerAd);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!OfferServicesAdExists(id))
+                    if (!_database.OfferServicesAdExists(id))
                     {
                         return NotFound();
                     }
@@ -95,22 +98,21 @@ namespace JWTAuthDemo.Controllers
                 return Unauthorized();
             }
 
-
             return NoContent();
         }
 
         // DELETE: api/offerAd/5
         [HttpDelete]
         [Route("offerAd/{id}")]
-        public async Task<ActionResult<OfferServicesAdModel>> DeleteOfferAd(long id)
+        public ActionResult<OfferServicesAdModel> DeleteOfferAd(long id)
         {
-            var offerAd = await _database.OfferServicesAds.FindAsync(id);
+            var offerAd = _database.GetOfferServicesAd(id);
             if (offerAd == null)
             {
                 return NotFound();
             }
 
-            if (IsOwner(offerAd.UserId))
+            if (_database.IsOwner(offerAd.UserId, User))
             {
                 _database.RemoveOfferServicesAd(offerAd);
             }
@@ -119,23 +121,21 @@ namespace JWTAuthDemo.Controllers
                 return Unauthorized();
             }
 
-
-            return offerAd;
+            return NoContent();
         }
 
-        private bool IsOwner(long id)
+        private List<OfferServicesAdModel> GetOfferServicesAds()
         {
-            return User.Identity.Name == id.ToString();
-        }
+            var ads = _database.GetOfferServicesAds();
 
-        private OfferServicesAdModel GetOfferAdFromDatabase(long id)
-        {
-            return _database.GetOfferServicesAds().Find(o => o.Id == id);
-        }
+            List<OfferAdResponse> offers = new List<OfferAdResponse>();
 
-        private bool OfferServicesAdExists(long id)
-        {
-            return _database.GetOfferServicesAds().Any(e => e.Id == id);
+            ads.ForEach(ad =>
+            {
+                offers.Add(Converters.OfferAdModelToOfferAdResponse(ad, _database));
+            });
+
+            return ads;
         }
     }
 }

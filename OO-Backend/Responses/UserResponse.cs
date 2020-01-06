@@ -1,29 +1,43 @@
-﻿using JWTAuthDemo.Models;
+﻿using OO_Backend.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace JWTAuthDemo.Responses
+namespace OO_Backend.Responses
 {
     public class UserResponse
     {
-        public UserResponse(long id, string userName, string emailAddress, 
-            List<DogModel> dogs, List<RatingModel> ratings, List<NotificationModel> notifications)
+        public UserResponse(long id, string username, string emailAddress, string imageUrl,
+            string firstName, string lastName, DateTime birthDate, double rating,
+            List<DogModel> dogs, List<ReviewResponse> reviews, List<NotificationResponse> notifications,
+            List<RespondResponse> responds)
         {
             Id = id;
-            UserName = userName;
+            Username = username;
             EmailAddress = emailAddress;
+            ImageUrl = imageUrl;
+            FirstName = firstName;
+            LastName = lastName;
+            BirthDate = birthDate;
             Dogs = dogs;
-            Ratings = ratings;
+            Reviews = reviews;
             Notifications = notifications;
+            Rating = rating;
+            Responds = responds;
         }
 
         public long Id { get; set; }
-        public string UserName { get; set; }
+        public string Username { get; set; }
+        public string ImageUrl { get; set; }
+        public double Rating { get; set; }
         public string EmailAddress { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public DateTime BirthDate { get; set; }
         public List<DogModel> Dogs { get; set; }
-        public List<RatingModel> Ratings { get; set; }
-        public List<NotificationModel> Notifications { get; set; }
+        public List<ReviewResponse> Reviews { get; set; }
+        public List<NotificationResponse> Notifications { get; set; }
+        public List<RespondResponse> Responds { get; set; }
     }
 }

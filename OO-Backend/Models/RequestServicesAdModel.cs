@@ -1,18 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace JWTAuthDemo.Models
+namespace OO_Backend.Models
 {
     public class RequestServicesAdModel
     {
-        public long Id { get; set; }
+        [Column("RequestId")]
+        public int Id { get; set; }
         [Required(ErrorMessage = "User Id is required")]
-        public long UserId { get; set; }
-        public string Title { get; set; }
+        public int UserId { get; set; }
+        public string Neighborhood { get; set; }
         public string Body { get; set; }
         public DateTime Date { get; set; }
+        public int HourFrom { get; set; }
+        public int HourTo { get; set; }
+        [Required(ErrorMessage = "Dog Id is required")]
+        public int DogId { get; set; }
     }
 }

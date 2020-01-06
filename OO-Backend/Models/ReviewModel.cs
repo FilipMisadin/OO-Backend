@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace JWTAuthDemo.Models
+namespace OO_Backend.Models
 {
-    public class RatingModel
+    public class ReviewModel
     {
-        public long Id { get; set; }
+        [Column("ReviewId")]
+        public int Id { get; set; }
         [Required(ErrorMessage = "Send User Id is required")]
-        public long SendUserId { get; set; }
+        public int SendUserId { get; set; }
         [Required(ErrorMessage = "Receive User Id is required")]
-        public long ReceivedUserId { get; set; }
+        public int ReceiveUserId { get; set; }
         public string Body { get; set; }
         [Required(ErrorMessage = "Mark is required")]
         [Range(1, 5, ErrorMessage = "Mark must be between 1 and 5")]

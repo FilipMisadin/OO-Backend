@@ -1,11 +1,11 @@
-﻿using JWTAuthDemo.Models;
+﻿using OO_Backend.Models;
 using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace JWTAuthDemo
+namespace OO_Backend
 {
     public class DocumentAuthorizationHandler :
     AuthorizationHandler<SameAuthorRequirement, UserModel>
@@ -14,10 +14,7 @@ namespace JWTAuthDemo
                                                        SameAuthorRequirement requirement,
                                                        UserModel resource)
         {
-            Console.WriteLine("Context name: ");
-            Console.WriteLine("Resource name: ");
-            Console.WriteLine(resource.UserName);
-            if (context.User.Identity?.Name == resource.UserName)
+            if (context.User.Identity?.Name == resource.Username)
             {
                 context.Succeed(requirement);
             }

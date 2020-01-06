@@ -6,9 +6,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using JWTAuthDemo.Models;
+using OO_Backend.Models;
+using OO_Backend.Responses;
 
-namespace JWTAuthDemo.Controllers
+namespace OO_Backend.Controllers
 {
     [ApiController]
     [Authorize]
@@ -27,16 +28,19 @@ namespace JWTAuthDemo.Controllers
         [HttpGet]
         [Route("requestAds")]
         [AllowAnonymous]
-        public List<RequestServicesAdModel> GetAllRequestAds() => _database.GetRequestServicesAds();
+        public List<RequestServicesAdModel> GetAllRequestAds()
+        {
+            return GetRequestServicesAds();
+        }
 
         [HttpGet]
         [Route("requestAd/{id}")]
         [AllowAnonymous]
         public IActionResult GetRequestAd(long id)
         {
-            if (RequestServicesAdExists(id))
+            if (_database.RequestServicesAdExists(id))
             {
-                var requestAd = _database.GetRequestServicesAds().Find(o => o.Id == id);
+                var requestAd = _database.GetRequestServicesAd(id);
 
                 return Ok(requestAd);
             }
@@ -50,7 +54,18 @@ namespace JWTAuthDemo.Controllers
         [Route("requestAd")]
         public IActionResult AddRequestServicesAd([FromBody] RequestServicesAdModel requestAd)
         {
-            var ownerId = Convert.ToInt64(User.Identity.Name);
+            if (!_database.DogExists(requestAd.DogId))
+            {
+                return BadRequest(Constants.DogDoesntExistError);
+            }
+
+            var ownerId = Convert.ToInt32(_database.GetUser(User.Identity.Name).Id);
+
+            var dog = _database.GetDog(requestAd.DogId);
+            if(dog.OwnerId != ownerId)
+            {
+                return BadRequest(Constants.WrongDogOwnerError);
+            }
 
             requestAd.UserId = ownerId;
 
@@ -64,23 +79,22 @@ namespace JWTAuthDemo.Controllers
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut]
         [Route("requestAd/{id}")]
-        public async Task<IActionResult> PutRequestAd(long id, RequestServicesAdModel requestAd)
+        public IActionResult PutRequestAd(long id, RequestServicesAdModel requestAd)
         {
             if (id != requestAd.Id)
             {
                 return BadRequest();
             }
 
-            if (IsOwner(requestAd.UserId))
+            if (_database.IsOwner(requestAd.UserId, User))
             {
-                _database.Entry(requestAd).State = EntityState.Modified;
                 try
                 {
-                    await _database.SaveChangesAsync();
+                    _database.UpdateRequestServicesAd(requestAd);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!RequestServicesAdExists(id))
+                    if (!_database.RequestServicesAdExists(id))
                     {
                         return NotFound();
                     }
@@ -102,15 +116,15 @@ namespace JWTAuthDemo.Controllers
         // DELETE: api/RequestAd/5
         [HttpDelete]
         [Route("requestAd/{id}")]
-        public async Task<ActionResult<RequestServicesAdModel>> DeleteRequestAd(long id)
+        public ActionResult<RequestServicesAdModel> DeleteRequestAd(long id)
         {
-            var requestAd = await _database.RequestServicesAds.FindAsync(id);
+            var requestAd = _database.GetRequestServicesAd(id);
             if (requestAd == null)
             {
                 return NotFound();
             }
 
-            if (IsOwner(requestAd.UserId))
+            if (_database.IsOwner(requestAd.UserId, User))
             {
                 _database.RemoveRequestServicesAd(requestAd);
             }
@@ -120,17 +134,21 @@ namespace JWTAuthDemo.Controllers
             }
 
 
-            return requestAd;
-        }
-        
-        private bool IsOwner(long id)
-        {
-            return User.Identity.Name == id.ToString();
+            return NoContent();
         }
 
-        private bool RequestServicesAdExists(long id)
+        private List<RequestServicesAdModel> GetRequestServicesAds()
         {
-            return _database.GetRequestServicesAds().Any(e => e.Id == id);
+            var ads = _database.GetRequestServicesAds();
+
+            List<RequestAdResponse> requests = new List<RequestAdResponse>();
+
+            ads.ForEach(ad =>
+            {
+                requests.Add(Converters.RequestAdModelToRequestAdResponse(ad, _database));
+            });
+
+            return ads;
         }
     }
 }

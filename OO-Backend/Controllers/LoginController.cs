@@ -5,14 +5,14 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using JWTAuthDemo.Models;
+using OO_Backend.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-namespace JWTAuthDemo.Controllers
+namespace OO_Backend.Controllers
 {
     [Route("api")]
     [ApiController]
@@ -33,7 +33,7 @@ namespace JWTAuthDemo.Controllers
         {
             UserModel login = new UserModel
             {
-                UserName = username,
+                Username = username,
                 Password = pass
             };
             IActionResult response = Unauthorized();
@@ -52,9 +52,9 @@ namespace JWTAuthDemo.Controllers
         private UserModel AuthenticateUser(UserModel login)
         {
             UserModel user = null;
-            if (UsernameExists(login.UserName))
+            if (_database.UsernameExists(login.Username))
             {
-                user = _database.GetUsers().Find(user => user.UserName == login.UserName);
+                user = _database.GetUsers().Find(user => user.Username == login.Username);
             }
             return user;
         }
@@ -66,8 +66,8 @@ namespace JWTAuthDemo.Controllers
 
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                new Claim(JwtRegisteredClaimNames.UniqueName, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.EmailAddress),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
@@ -81,11 +81,6 @@ namespace JWTAuthDemo.Controllers
 
             var encodeToken = new JwtSecurityTokenHandler().WriteToken(token);
             return encodeToken;
-        }
-
-        private bool UsernameExists(string username)
-        {
-            return _database.GetUsers().Any(o => o.UserName == username);
         }
     }
 }

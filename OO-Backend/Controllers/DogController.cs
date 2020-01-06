@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using JWTAuthDemo.Models;
+using OO_Backend.Models;
 
-namespace webapi.Controllers
+namespace OO_Backend.Controllers
 {
     [ApiController]
     [Authorize]
@@ -32,11 +32,11 @@ namespace webapi.Controllers
         [HttpGet]
         [Route("dog/{id}")]
         [AllowAnonymous]
-        public IActionResult GetDog(long id)
+        public IActionResult GetDog(int id)
         {
-            if (DogExists(id))
+            if (_database.DogExists(id))
             {
-                var dog = GetDogFromDatabase(id);
+                var dog = _database.GetDog(id);
 
                 return Ok(dog);
             }
@@ -50,11 +50,16 @@ namespace webapi.Controllers
         [Route("dog")]
         public IActionResult AddDog([FromBody] DogModel dog)
         {
-            var ownerId = Convert.ToInt64(User.Identity.Name);
-
-            if (!UserExists(ownerId))
+            if(dog.Name == "")
             {
-                return BadRequest("Owner doesn't exist");
+                return BadRequest(Constants.NameIsRequiredError);
+            }
+
+            var ownerId = Convert.ToInt32(_database.GetUser(User.Identity.Name).Id);
+
+            if (!_database.UserExists(ownerId))
+            {
+                return BadRequest(Constants.DogOwnerDoesntExistError);
             }
 
             dog.OwnerId = ownerId;
@@ -69,23 +74,22 @@ namespace webapi.Controllers
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut]
         [Route("dog/{id}")]
-        public async Task<IActionResult> PutDog(long id, DogModel dog)
+        public IActionResult PutDog(int id, DogModel dog)
         {
             if (id != dog.Id)
             {
                 return BadRequest();
             }
 
-            if (IsOwner(dog.OwnerId))
+            if (_database.IsOwner(dog.OwnerId, User))
             {
-                _database.Entry(dog).State = EntityState.Modified;
                 try
                 {
-                    await _database.SaveChangesAsync();
+                    _database.UpdateDog(dog);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DogExists(id))
+                    if (!_database.DogExists(id))
                     {
                         return NotFound();
                     }
@@ -107,15 +111,15 @@ namespace webapi.Controllers
         // DELETE: api/Dogs/5
         [HttpDelete]
         [Route("dog/{id}")]
-        public async Task<ActionResult<DogModel>> DeleteDog(long id)
+        public ActionResult<DogModel> DeleteDog(long id)
         {
-            var dog = await _database.Dogs.FindAsync(id);
+            var dog = _database.GetDog(id);
             if (dog == null)
             {
                 return NotFound();
             }
 
-            if (IsOwner(dog.OwnerId))
+            if (_database.IsOwner(dog.OwnerId, User))
             {
                 _database.RemoveDog(dog);
             }
@@ -123,29 +127,8 @@ namespace webapi.Controllers
             {
                 return Unauthorized();
             }
-
-
-            return dog;
-        }
-
-        private bool IsOwner(long id)
-        {
-            return User.Identity.Name == id.ToString();
-        }
-
-        private DogModel GetDogFromDatabase(long id)
-        {
-            return _database.GetDogs().Find(dog => dog.Id == id);
-        }
-
-        private bool UserExists(long id)
-        {
-            return _database.GetUsers().Any(e => e.Id == id);
-        }
-
-        private bool DogExists(long id)
-        {
-            return _database.GetDogs().Any(e => e.Id == id);
+            
+            return NoContent();
         }
     }
 }

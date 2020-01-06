@@ -1,34 +1,28 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using OO_Backend.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
-namespace JWTAuthDemo.Models
+namespace OO_Backend.Models
 {
     public class NotificationModel
     {
-        public long Id { get; set; }
+        [Column("NotificationId")]
+        public int Id { get; set; }
         [Required(ErrorMessage = "Send User Id is required")]
-        public long SendUserId { get; set; }
+        public int SendUserId { get; set; }
         [Required(ErrorMessage = "Receive User Id is required")]
-        public long ReceivedUserId { get; set; }
-        public string Body { get; set; }
+        public int ReceivedUserId { get; set; }
         [JsonProperty("type")]
         [Required(ErrorMessage = "Type is required")]
-        public Type Type { get; set; }
+        public NotificationType Type { get; set; }
         [Required(ErrorMessage = "Status is required")]
-        public Status Status { get; set; }
+        public NotificationStatus Status { get; set; }
     }
-
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum Type { [EnumMember(Value = "offer")] Offer, 
-        [EnumMember(Value = "Decline")] Decline, [EnumMember(Value = "Accept")] Accept }
-
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum Status { [EnumMember(Value = "Accepted")] Accepted, 
-        [EnumMember(Value = "Declined")] Declined, [EnumMember(Value = "Pending")] Pending }
 }

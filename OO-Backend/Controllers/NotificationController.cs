@@ -6,9 +6,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using JWTAuthDemo.Models;
+using OO_Backend.Models;
+using OO_Backend.Responses;
 
-namespace webapi.Controllers
+namespace OO_Backend.Controllers
 {
     [ApiController]
     [Authorize]
@@ -24,16 +25,61 @@ namespace webapi.Controllers
             _database = context;
         }
 
+        [HttpPost]
+        [Route("notification/{id}/accept")]
+        public IActionResult AcceptNotification(int id)
+        {
+            if (!_database.NotificationExists(id))
+            {
+                return BadRequest(Constants.NotificationDoesntExistError);
+            }
+
+            var ownerId = Convert.ToInt32(_database.GetUser(User.Identity.Name).Id);
+            var notification = _database.GetNotification(id);
+
+            if (notification.ReceivedUserId != ownerId)
+            {
+                return Unauthorized();
+            }
+
+            _database.AcceptNotification(id);
+            return Ok(notification);
+        }
+
+        [HttpPost]
+        [Route("notification/{id}/decline")]
+        public IActionResult DeclineNotification(int id)
+        {
+            if (!_database.NotificationExists(id))
+            {
+                return BadRequest(Constants.NotificationDoesntExistError);
+            }
+
+            var ownerId = Convert.ToInt32(_database.GetUser(User.Identity.Name).Id);
+            var notification = _database.GetNotification(id);
+
+            if (notification.ReceivedUserId != ownerId)
+            {
+                return Unauthorized();
+            }
+
+            _database.DeclineNotification(id);
+            return Ok(notification);
+        }
+
         [HttpGet]
         [Route("notification/{id}")]
-        [AllowAnonymous]
-        public IActionResult GetNotification(long id)
+        public IActionResult GetNotification(int id)
         {
-            if (NotificationExists(id))
+            if (_database.NotificationExists(id))
             {
-                var notification = GetNotificationFromDatabase(id);
+                var notification = _database.GetNotification(id);
 
-                return Ok(notification);
+                if(_database.IsOwner(notification.ReceivedUserId, User))
+                {
+                    return Ok(notification);
+                }
+                return Unauthorized();
             }
             else
             {
@@ -43,24 +89,29 @@ namespace webapi.Controllers
 
         [HttpPost]
         [Route("notification")]
-        public IActionResult AddNotification([FromBody] NotificationModel notification)
+        public IActionResult AddNotification([FromBody] NotificationBodyModel notification)
         {
-            if (!UserExists(notification.ReceivedUserId))
+            if (!_database.UserExists(notification.ReceivedUserId))
             {
-                return BadRequest("Received User is not valid.");
+                return BadRequest(Constants.ReceiveUserIsNotValidError);
             }
 
-            var ownerId = Convert.ToInt64(User.Identity.Name);
+            var ownerId = Convert.ToInt32(_database.GetUser(User.Identity.Name).Id);
 
             if (notification.ReceivedUserId == ownerId)
             {
-                return BadRequest("User can't notify himself.");
+                return BadRequest(Constants.UserCantNotifyHimselfError);
             }
 
             notification.SendUserId = ownerId;
 
             _logger.LogInformation("Add notification for notificationId: {notification}", notification.Id);
-            _database.AddNotification(notification);
+            var notificationId = _database.AddNotification(Converters.NotificationBodyModelToNotificationModel(notification));
+            if(notification.DogId != 0)
+            {
+                _database.AddRequestNotification(Converters.NotificationBodyModelToRequestNotificationModel(notification), notificationId);
+            }
+            notification.Id = notificationId;
             return Ok(notification);
         }
 
@@ -69,28 +120,28 @@ namespace webapi.Controllers
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut]
         [Route("notification/{id}")]
-        public async Task<IActionResult> PutNotification(long id, NotificationModel notification)
+        public IActionResult PutNotification(int id,[FromBody] NotificationBodyModel notification)
         {
             if (id != notification.Id)
             {
                 return BadRequest();
             }
 
-            if (!NotificationExists(id))
+            if (!_database.NotificationExists(id))
             {
                 return NotFound();
             }
 
-            if (IsOwner(notification.SendUserId))
+            if (_database.IsOwner(notification.SendUserId, User))
             {
-                _database.Entry(notification).State = EntityState.Modified;
                 try
                 {
-                    await _database.SaveChangesAsync();
+                    _database.UpdateNotification(Converters.NotificationBodyModelToNotificationModel(notification));
+                    _database.UpdateRequestNotification(Converters.NotificationBodyModelToRequestNotificationModel(notification));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!NotificationExists(id))
+                    if (!_database.NotificationExists(id))
                     {
                         return NotFound();
                     }
@@ -112,15 +163,15 @@ namespace webapi.Controllers
         // DELETE: api/notification/5
         [HttpDelete]
         [Route("notification/{id}")]
-        public async Task<ActionResult<NotificationModel>> DeleteNotification(long id)
+        public ActionResult<NotificationModel> DeleteNotification(int id)
         {
-            if (NotificationExists(id))
+            if (_database.NotificationExists(id))
             {
                 return NotFound();
             }
-            var notification = await _database.Notifications.FindAsync(id);
+            var notification = _database.GetNotification(id);
 
-            if (IsOwner(notification.SendUserId))
+            if (_database.IsOwner(notification.SendUserId, User))
             {
                 _database.RemoveNotification(notification);
             }
@@ -129,26 +180,7 @@ namespace webapi.Controllers
                 return Unauthorized();
             }
 
-            return notification;
-        }
-
-        private bool UserExists(long id)
-        {
-            return _database.GetUsers().Any(e => e.Id == id);
-        }
-
-        private bool IsOwner(long id)
-        {
-            return User.Identity.Name == id.ToString();
-        }
-
-        private NotificationModel GetNotificationFromDatabase(long id)
-        {
-            return _database.GetNotifications().Find(notification => notification.Id == id);
-        }
-        private bool NotificationExists(long id)
-        {
-            return _database.GetNotifications().Any(e => e.Id == id);
+            return NoContent();
         }
     }
 }

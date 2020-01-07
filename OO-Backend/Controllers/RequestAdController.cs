@@ -28,7 +28,7 @@ namespace OO_Backend.Controllers
         [HttpGet]
         [Route("requestAds")]
         [AllowAnonymous]
-        public List<RequestServicesAdModel> GetAllRequestAds()
+        public List<RequestAdResponse> GetAllRequestAds()
         {
             return GetRequestServicesAds();
         }
@@ -137,7 +137,7 @@ namespace OO_Backend.Controllers
             return NoContent();
         }
 
-        private List<RequestServicesAdModel> GetRequestServicesAds()
+        private List<RequestAdResponse> GetRequestServicesAds()
         {
             var ads = _database.GetRequestServicesAds();
 
@@ -148,7 +148,7 @@ namespace OO_Backend.Controllers
                 requests.Add(Converters.RequestAdModelToRequestAdResponse(ad, _database));
             });
 
-            return ads;
+            return requests;
         }
     }
 }

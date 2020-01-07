@@ -28,7 +28,7 @@ namespace OO_Backend.Controllers
         [HttpGet]
         [Route("offerAds")]
         [AllowAnonymous]
-        public List<OfferServicesAdModel> GetAllOfferAds() 
+        public List<OfferAdResponse> GetAllOfferAds() 
         {
             return GetOfferServicesAds();
         }
@@ -124,7 +124,7 @@ namespace OO_Backend.Controllers
             return NoContent();
         }
 
-        private List<OfferServicesAdModel> GetOfferServicesAds()
+        private List<OfferAdResponse> GetOfferServicesAds()
         {
             var ads = _database.GetOfferServicesAds();
 
@@ -135,7 +135,7 @@ namespace OO_Backend.Controllers
                 offers.Add(Converters.OfferAdModelToOfferAdResponse(ad, _database));
             });
 
-            return ads;
+            return offers;
         }
     }
 }

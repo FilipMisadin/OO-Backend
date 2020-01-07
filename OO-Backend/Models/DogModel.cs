@@ -16,5 +16,6 @@ namespace OO_Backend.Models
         public string Name { get; set; }
         public DateTime BirthDate { get; set; }
         public string Breed { get; set; }
+        public string ImageUrl { get; set; }
     }
 }

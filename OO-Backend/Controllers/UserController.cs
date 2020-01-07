@@ -229,6 +229,14 @@ namespace OO_Backend.Controllers
             return _database.GetUserReviews(userId);
         }
 
+        [HttpGet]
+        [Route("user/{userId}/dogs")]
+        [AllowAnonymous]
+        public List<DogModel> GetUserDogs(long userId)
+        {
+            return _database.GetUserDogs(userId);
+        }
+
         private bool CheckUsername(string username)
         {
             return User.Identity.Name != username;

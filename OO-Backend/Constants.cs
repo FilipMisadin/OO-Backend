@@ -19,6 +19,7 @@ namespace OO_Backend
         public static string UsernameAlreadyExistError = "Username already exists.";
         public static string WrongUserIdError = "Wrong user id.";
         public static string WrongDogOwnerError = "Dog doesn't belong to user.";
+        public static string PasswordRequiredError = "Password is required.";
 
         public static string DefaultImageUrl = "https://i.imgur.com/JGu6U1X.jpg";
     }

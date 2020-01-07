@@ -71,6 +71,11 @@ namespace OO_Backend.Controllers
                 return BadRequest(Constants.UsernameAlreadyExistError);
             }
 
+            if(user.Password == "")
+            {
+                return BadRequest(Constants.PasswordRequiredError);
+            }
+
             if(user.ImageUrl == "")
             {
                 user.ImageUrl = Constants.DefaultImageUrl;

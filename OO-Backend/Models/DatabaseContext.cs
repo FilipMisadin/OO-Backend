@@ -67,7 +67,15 @@ namespace OO_Backend.Models
 
         public void UpdateUser(UserModel user)
         {
-            Entry(GetUsers().Find(o => o.Id == user.Id)).State = EntityState.Detached;
+            var currentUser = GetUsers().Find(o => o.Id == user.Id);
+            Entry(currentUser).State = EntityState.Detached;
+            user.Rating = currentUser.Rating;
+
+            if(user.Password == "")
+            {
+                user.Password = currentUser.Password;
+            }
+
             Users.Update(user);
             this.SaveChanges();
             return;

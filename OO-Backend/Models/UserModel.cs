@@ -14,7 +14,6 @@ namespace OO_Backend.Models
         public int Id { get; set; }
         [Required(ErrorMessage = "Username is required")]
         public string Username { get; set; }
-        [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; }
         public string ImageUrl { get; set; }
         public string EmailAddress { get; set; }

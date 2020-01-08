@@ -19,14 +19,7 @@ namespace OO_Backend
             response.Dogs.AddRange(dogs);
 
             var reviews = database.GetUserReviews(user.Id);
-            List<ReviewResponse> reviewResponses = new List<ReviewResponse>();
-
-            reviews.ForEach(review =>
-            {
-                reviewResponses.Add(ReviewModelToReviewResponse(review, database));
-            });
-
-            response.Reviews.AddRange(reviewResponses);
+            response.Reviews.AddRange(reviews);
 
             var notifications = database.GetUserNotifications(user.Id);
             List<NotificationResponse> notificationResponses = new List<NotificationResponse>();
@@ -82,14 +75,7 @@ namespace OO_Backend
             response.Dogs.AddRange(dogs);
 
             var reviews = database.GetUserReviews(user.Id);
-            List<ReviewResponse> reviewResponses = new List<ReviewResponse>();
-
-            reviews.ForEach(review =>
-            {
-                reviewResponses.Add(ReviewModelToReviewResponse(review, database));
-            });
-
-            response.Reviews.AddRange(reviewResponses);
+            response.Reviews.AddRange(reviews);
 
             return response;
         }

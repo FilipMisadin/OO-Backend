@@ -24,5 +24,6 @@ namespace OO_Backend.Models
         public NotificationType Type { get; set; }
         [Required(ErrorMessage = "Status is required")]
         public NotificationStatus Status { get; set; }
+        public int AdId { get; set; }
     }
 }

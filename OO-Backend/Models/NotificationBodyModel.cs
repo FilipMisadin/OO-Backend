@@ -27,5 +27,6 @@ namespace OO_Backend.Models
         public int TimeFrom { get; set; }
         public int TimeTo { get; set; }
         public string MeetAddress { get; set; }
+        public int AdId { get; set; }
     }
 }

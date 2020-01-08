@@ -19,5 +19,6 @@ namespace OO_Backend.Responses
         public int TimeFrom { get; set; }
         public int TimeTo { get; set; }
         public string MeetAddress { get; set; }
+        public string AdNumber { get; set; }
     }
 }

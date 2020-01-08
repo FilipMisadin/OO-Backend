@@ -98,7 +98,8 @@ namespace OO_Backend
                 Date = requestData.Date,
                 TimeFrom = requestData.TimeFrom,
                 TimeTo = requestData.TimeTo,
-                MeetAddress = requestData.MeetAddress
+                MeetAddress = requestData.MeetAddress,
+                AdNumber = notification.Type + "#" + notification.AdId.ToString().PadLeft(4, '0')
             };
 
             return response;
@@ -122,7 +123,8 @@ namespace OO_Backend
                 Date = requestData.Date,
                 TimeFrom = requestData.TimeFrom,
                 TimeTo = requestData.TimeTo,
-                MeetAddress = requestData.MeetAddress
+                MeetAddress = requestData.MeetAddress,
+                AdNumber = notification.Type + "#" + notification.AdId.ToString().PadLeft(4, '0')
             };
 
             return response;
@@ -166,7 +168,8 @@ namespace OO_Backend
                 SendUserId = notification.SendUserId,
                 ReceivedUserId = notification.ReceivedUserId,
                 Type = notification.Type,
-                Status = notification.Status
+                Status = notification.Status,
+                AdId = notification.AdId
             };
 
             return response;

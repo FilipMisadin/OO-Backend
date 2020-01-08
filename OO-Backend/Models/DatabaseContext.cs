@@ -483,9 +483,17 @@ namespace OO_Backend.Models
             return GetNotifications().FindAll(notifications => notifications.SendUserId == userId);
         }
 
-        public List<ReviewModel> GetUserReviews(long userId)
+        public List<ReviewResponse> GetUserReviews(long userId)
         {
-            return GetReviews().FindAll(review => review.ReceiveUserId == userId);
+            var reviews = GetReviews().FindAll(review => review.ReceiveUserId == userId);
+
+            var response = new List<ReviewResponse>();
+            reviews.ForEach(review =>
+            {
+                response.Add(Converters.ReviewModelToReviewResponse(review, this));
+            });
+
+            return response;
         }
 
         public List<ReviewModel> GetUserRelatedReviews(long userId)

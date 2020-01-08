@@ -229,7 +229,7 @@ namespace OO_Backend.Controllers
         [HttpGet]
         [Route("user/{userId}/reviews")]
         [AllowAnonymous]
-        public List<ReviewModel> GetUserReviews(long userId)
+        public List<ReviewResponse> GetUserReviews(long userId)
         {
             return _database.GetUserReviews(userId);
         }

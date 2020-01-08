@@ -12,5 +12,6 @@ namespace OO_Backend.Responses
         public int ReceiveUserId { get; set; }
         public string Body { get; set; }
         public int Mark { get; set; }
+        public DateTime Date { get; set; }
     }
 }

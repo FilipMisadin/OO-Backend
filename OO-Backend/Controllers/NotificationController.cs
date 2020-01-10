@@ -24,7 +24,7 @@ namespace OO_Backend.Controllers
             _logger = logger;
             _database = context;
         }
-
+        /*
         [HttpPost]
         [Route("notification/{id}/accept")]
         public IActionResult AcceptNotification(int id)
@@ -86,10 +86,10 @@ namespace OO_Backend.Controllers
                 return NotFound();
             }
         }
-
+        
         [HttpPost]
         [Route("notification")]
-        public IActionResult AddNotification([FromBody] NotificationBodyModel notification)
+        public IActionResult AddNotification([FromBody] OfferNotificationBodyModel notification)
         {
             if (!_database.UserExists(notification.ReceivedUserId))
             {
@@ -120,7 +120,7 @@ namespace OO_Backend.Controllers
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut]
         [Route("notification/{id}")]
-        public IActionResult PutNotification(int id,[FromBody] NotificationBodyModel notification)
+        public IActionResult PutNotification(int id,[FromBody] OfferNotificationBodyModel notification)
         {
             if (id != notification.Id)
             {
@@ -163,7 +163,7 @@ namespace OO_Backend.Controllers
         // DELETE: api/notification/5
         [HttpDelete]
         [Route("notification/{id}")]
-        public ActionResult<NotificationModel> DeleteNotification(int id)
+        public ActionResult<OfferNotificationModel> DeleteNotification(int id)
         {
             if (_database.NotificationExists(id))
             {
@@ -181,6 +181,6 @@ namespace OO_Backend.Controllers
             }
 
             return NoContent();
-        }
+        }*/
     }
 }

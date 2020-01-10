@@ -16,10 +16,10 @@ namespace OO_Backend.Models
         public DbSet<OfferServicesAdModel> OfferServicesAds { get; set; }
         public DbSet<RequestServicesAdModel> RequestServicesAds { get; set; }
         public DbSet<ReviewModel> Reviews { get; set; }
-        public DbSet<NotificationModel> Notifications { get; set; }
+        public DbSet<OfferNotificationModel> OfferNotifications { get; set; }
+        public DbSet<RequestNotificationModel> RequestNotifications { get; set; }
         public DbSet<NeighborhoodModel> Neighborhoods { get; set; }
         public DbSet<OfferToNeighborhood> OfferToNeighborhood { get; set; }
-        public DbSet<RequestNotificationModel> RequestNotifications { get; set; }
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
         { }
@@ -27,13 +27,7 @@ namespace OO_Backend.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .Entity<NotificationModel>()
-                .Property(p => p.Type)
-                .HasConversion(
-                    v => v.ToString(),
-                    v => (NotificationType)Enum.Parse(typeof(NotificationType), v));
-            modelBuilder
-                .Entity<NotificationModel>()
+                .Entity<OfferNotificationModel>()
                 .Property(p => p.Status)
                 .HasConversion(
                     v => v.ToString(),
@@ -59,7 +53,7 @@ namespace OO_Backend.Models
         public List<OfferServicesAdModel> GetOfferServicesAds() => OfferServicesAds.ToList();
         public List<RequestServicesAdModel> GetRequestServicesAds() => RequestServicesAds.ToList();
         public List<ReviewModel> GetReviews() => Reviews.ToList();
-        public List<NotificationModel> GetNotifications() => Notifications.ToList();
+        public List<OfferNotificationModel> GetNotifications() => OfferNotifications.ToList();
         public List<NeighborhoodModel> GetNeighborhoods() => Neighborhoods.ToList();
         public List<OfferToNeighborhood> GetOfferToNeighborhoods() => OfferToNeighborhood.ToList();
         public List<RequestNotificationModel> GetRequestNotifications() => RequestNotifications.ToList();
@@ -136,27 +130,27 @@ namespace OO_Backend.Models
             return;
         }
 
-        public void UpdateNotification(NotificationModel notification)
+        public void UpdateOfferNotification(OfferNotificationModel notification)
         {
             Entry(GetNotifications().Find(o => o.Id == notification.Id)).State = EntityState.Detached;
-            Notifications.Update(notification);
+            OfferNotifications.Update(notification);
             this.SaveChanges();
             return;
         }
 
-        public void AcceptNotification(long notificationId)
+        public void AcceptOfferNotification(long notificationId)
         {
             var notification = GetNotification(notificationId);
             notification.Status = NotificationStatus.Accepted;
-            UpdateNotification(notification);
+            UpdateOfferNotification(notification);
             return;
         }
 
-        public void DeclineNotification(long notificationId)
+        public void DeclineOfferNotification(long notificationId)
         {
             var notification = GetNotification(notificationId);
             notification.Status = NotificationStatus.Declined;
-            UpdateNotification(notification);
+            UpdateOfferNotification(notification);
             return;
         }
 
@@ -243,18 +237,19 @@ namespace OO_Backend.Models
             return;
         }
 
-        public int AddNotification(NotificationModel notification)
+        public int AddNotification(OfferNotificationModel notification)
         {
-            var entity = Notifications.Add(notification).Entity;
+            /*var entity = Notifications.Add(notification).Entity;
             this.SaveChanges();
-            return entity.Id;
+            return entity.Id;*/
+            return 0;
         }
 
         public void AddRequestNotification(RequestNotificationModel requestNotification, int notificationId)
         {
-            requestNotification.NotificationId = notificationId;
+            /*requestNotification.NotificationId = notificationId;
             RequestNotifications.Add(requestNotification);
-            this.SaveChanges();
+            this.SaveChanges();*/
             return;
         }
 
@@ -355,16 +350,16 @@ namespace OO_Backend.Models
             return;
         }
 
-        public void RemoveNotification(NotificationModel notification)
+        public void RemoveNotification(OfferNotificationModel notification)
         {
-            var requestNotifications = GetRequestNotificationsFromNotification(notification.Id);
+            /*var requestNotifications = GetRequestNotificationsFromNotification(notification.Id);
             requestNotifications.ForEach(requestNotification =>
             {
                 RemoveRequestNotification(requestNotification);
             });
 
             Notifications.Remove(notification);
-            this.SaveChanges();
+            this.SaveChanges();*/
             return;
         }
 
@@ -443,7 +438,7 @@ namespace OO_Backend.Models
             return GetDogs().FindAll(dog => dog.OwnerId == userId);
         }
 
-        public NotificationModel GetNotification(long id)
+        public OfferNotificationModel GetNotification(long id)
         {
             return GetNotifications().Find(notification => notification.Id == id);
         }
@@ -453,33 +448,41 @@ namespace OO_Backend.Models
             return GetRequestNotifications().Find(notification => notification.Id == id);
         }
 
-        public RequestNotificationModel GetNotificationRequestData(long notificationId)
+        /*public RequestNotificationModel GetNotificationRequestData(long notificationId)
         {
             return GetRequestNotifications().Find(notification => notification.NotificationId == notificationId);
-        }
+        }*/
 
-        public List<NotificationModel> GetUserNotifications(long userId)
+        public List<OfferNotificationModel> GetUserNotifications(long userId)
         {
             return GetNotifications().FindAll(notifications => notifications.ReceivedUserId == userId);
         }
 
-        public List<RequestNotificationModel> GetRequestNotificationsFromNotification(long notificationId)
+        /*public List<RequestNotificationModel> GetRequestNotificationsFromNotification(long notificationId)
         {
             return GetRequestNotifications().FindAll(o => o.NotificationId == notificationId);
-        }
+        }*/
 
         public List<RequestNotificationModel> GetDogRequestNotifications(long dogId)
         {
             return GetRequestNotifications().FindAll(o => o.DogId == dogId);
         }
 
-        public List<NotificationModel> GetUserRelatedNotifications(long userId)
+        public List<OfferNotificationModel> GetUserRelatedNotifications(long userId)
         {
             return GetNotifications().FindAll(notifications => notifications.ReceivedUserId == userId || notifications.SendUserId == userId);
         }
 
-        public List<NotificationModel> GetUserResponds(long userId)
+        public List<OfferNotificationModel> GetUserOfferResponds(long userId)
         {
+            /*var responds = GetOfferNotifications().FindAll(notifications => notifications.SendUserId == userId);
+            List<OfferNotificationResponse> respondResponses = new List<OfferNotificationResponse>();
+
+            responds.ForEach(respond =>
+            {
+                respondResponses.Add(NotificationModelToRespondResponse(respond, database));
+            });
+            response.Responds.AddRange(respondResponses);*/
             return GetNotifications().FindAll(notifications => notifications.SendUserId == userId);
         }
 

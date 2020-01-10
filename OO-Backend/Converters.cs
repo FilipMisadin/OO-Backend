@@ -13,7 +13,7 @@ namespace OO_Backend
         {
             var response = new UserResponse(user.Id, user.Username, user.EmailAddress, user.ImageUrl,
                 user.FirstName, user.LastName, user.BirthDate, user.Rating,
-                new List<DogModel>(), new List<ReviewResponse>(), new List<NotificationResponse>(), new List<RespondResponse>());
+                new List<DogModel>(), new List<ReviewResponse>()/*, new List<OfferNotificationResponse>(), new List<RespondResponse>()*/);
 
             var dogs = database.GetUserDogs(user.Id);
             response.Dogs.AddRange(dogs);
@@ -21,8 +21,8 @@ namespace OO_Backend
             var reviews = database.GetUserReviews(user.Id);
             response.Reviews.AddRange(reviews);
 
-            var notifications = database.GetUserNotifications(user.Id);
-            List<NotificationResponse> notificationResponses = new List<NotificationResponse>();
+            /*var notifications = database.GetUserNotifications(user.Id);
+            List<OfferNotificationResponse> notificationResponses = new List<OfferNotificationResponse>();
 
             notifications.ForEach(notification =>
             {
@@ -37,7 +37,7 @@ namespace OO_Backend
             {
                 respondResponses.Add(NotificationModelToRespondResponse(respond, database));
             });
-            response.Responds.AddRange(respondResponses);
+            response.Responds.AddRange(respondResponses);*/
 
             return response;
         }
@@ -79,15 +79,15 @@ namespace OO_Backend
 
             return response;
         }
-
-        public static NotificationResponse NotificationModelToNotificationResponse(NotificationModel notification, DatabaseContext database)
+        /*
+        public static OfferNotificationResponse OfferNotificationModelToOfferNotificationResponse(OfferNotificationModel notification, DatabaseContext database)
         {
             var requestData = database.GetNotificationRequestData(notification.Id);
             if (requestData == null)
             {
                 requestData = new RequestNotificationModel();
             }
-            var response = new NotificationResponse
+            var response = new OfferNotificationResponse
             {
                 Id = notification.Id,
                 SendUser = UserModelToShortUserResponse(database.GetUser(notification.SendUserId)),
@@ -105,7 +105,7 @@ namespace OO_Backend
             return response;
         }
 
-        public static RespondResponse NotificationModelToRespondResponse(NotificationModel notification, DatabaseContext database)
+        public static RespondResponse NotificationModelToRespondResponse(OfferNotificationModel notification, DatabaseContext database)
         {
             var requestData = database.GetNotificationRequestData(notification.Id);
             if (requestData == null)
@@ -117,7 +117,6 @@ namespace OO_Backend
                 Id = notification.Id,
                 SendUserId = notification.SendUserId,
                 ReceivedUser = UserModelToShortUserResponse(database.GetUser(notification.ReceivedUserId)),
-                Type = notification.Type,
                 Status = notification.Status,
                 Dog = database.GetDog(requestData.DogId),
                 Date = requestData.Date,
@@ -128,7 +127,7 @@ namespace OO_Backend
             };
 
             return response;
-        }
+        }*/
 
         public static ReviewResponse ReviewModelToReviewResponse(ReviewModel review, DatabaseContext database)
         {
@@ -145,7 +144,7 @@ namespace OO_Backend
             return reviewResponse;
         }
 
-        public static RequestNotificationModel NotificationBodyModelToRequestNotificationModel(NotificationBodyModel notification)
+        /*public static RequestNotificationModel NotificationBodyModelToRequestNotificationModel(OfferNotificationBodyModel notification)
         {
             var response = new RequestNotificationModel
             {
@@ -160,20 +159,19 @@ namespace OO_Backend
             return response;
         }
 
-        public static NotificationModel NotificationBodyModelToNotificationModel(NotificationBodyModel notification)
+        public static OfferNotificationModel NotificationBodyModelToNotificationModel(OfferNotificationBodyModel notification)
         {
-            var response = new NotificationModel
+            var response = new OfferNotificationModel
             {
                 Id = notification.Id,
                 SendUserId = notification.SendUserId,
                 ReceivedUserId = notification.ReceivedUserId,
-                Type = notification.Type,
                 Status = notification.Status,
-                AdId = notification.AdId
+                RequestAdId = notification.AdId
             };
 
             return response;
-        }
+        }*/
 
         public static OfferServicesAdModel OfferAdBodyToOfferAdModel(OfferAdBodyModel offer)
         {
@@ -182,6 +180,7 @@ namespace OO_Backend
                 Id = offer.Id,
                 UserId = offer.UserId,
                 Body = offer.Body,
+                PostDate = offer.Date,
                 DayAvailableFrom = offer.DayAvailableFrom,
                 DayAvailableTo = offer.DayAvailableTo,
                 HourAvailableFrom = offer.HourAvailableFrom,
@@ -197,6 +196,7 @@ namespace OO_Backend
             {
                 Id = offerAd.Id,
                 Body = offerAd.Body,
+                Date = offerAd.PostDate,
                 DayAvailableFrom = offerAd.DayAvailableFrom,
                 DayAvailableTo = offerAd.DayAvailableTo,
                 HourAvailableFrom = offerAd.HourAvailableFrom,
@@ -217,7 +217,7 @@ namespace OO_Backend
                 Id = requestAd.Id,
                 Body = requestAd.Body,
                 Neighborhood = requestAd.Neighborhood,
-                Date = requestAd.Date,
+                Date = requestAd.PostDate,
                 HourFrom = requestAd.HourFrom,
                 HourTo = requestAd.HourTo
             };

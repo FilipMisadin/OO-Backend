@@ -159,14 +159,14 @@ namespace OO_Backend.Controllers
 
             return NoContent();
         }
-
+        /*
         [HttpGet]
         [Route("user/{userId}/notifications")]
-        public List<NotificationResponse> GetNotifications(int userId)
+        public List<OfferNotificationResponse> GetNotifications(int userId)
         {
             var notifications = _database.GetUserNotifications(userId);
 
-            var response = new List<NotificationResponse>();
+            var response = new List<OfferNotificationResponse>();
 
             notifications.ForEach(notification =>
             {
@@ -190,7 +190,7 @@ namespace OO_Backend.Controllers
             });
 
             return response;
-        }
+        }*/
 
         [HttpGet]
         [Route("user/{userId}/offerAds")]

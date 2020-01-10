@@ -15,7 +15,9 @@ namespace OO_Backend.Models
         public int UserId { get; set; }
         public string Neighborhood { get; set; }
         public string Body { get; set; }
-        public DateTime Date { get; set; }
+        [Column("Date")]
+        public DateTime PostDate { get; set; }
+        //public DateTime RequestDate { get; set; }
         public int HourFrom { get; set; }
         public int HourTo { get; set; }
         [Required(ErrorMessage = "Dog Id is required")]

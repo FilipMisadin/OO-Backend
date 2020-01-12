@@ -13,6 +13,7 @@ namespace OO_Backend.Responses
         public string Neighborhood { get; set; }
         public string Body { get; set; }
         public DateTime PostDate { get; set; }
+        public DateTime MeetDate { get; set; }
         public int HourFrom { get; set; }
         public int HourTo { get; set; }
         public DogModel Dog { get; set; }

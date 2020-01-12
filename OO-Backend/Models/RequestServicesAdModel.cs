@@ -17,7 +17,7 @@ namespace OO_Backend.Models
         public string Neighborhood { get; set; }
         public string Body { get; set; }
         public DateTime PostDate { get; set; }
-        //public DateTime RequestDate { get; set; }
+        public DateTime MeetDate { get; set; }
         public int HourFrom { get; set; }
         public int HourTo { get; set; }
         [Required(ErrorMessage = "Dog Id is required")]
@@ -32,6 +32,7 @@ namespace OO_Backend.Models
                 Body = this.Body,
                 Neighborhood = this.Neighborhood,
                 PostDate = this.PostDate,
+                MeetDate = this.MeetDate,
                 HourFrom = this.HourFrom,
                 HourTo = this.HourTo
             };

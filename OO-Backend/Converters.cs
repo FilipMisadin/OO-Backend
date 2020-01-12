@@ -121,7 +121,7 @@ namespace OO_Backend
                 Id = offer.Id,
                 UserId = offer.UserId,
                 Body = offer.Body,
-                PostDate = offer.Date,
+                PostDate = offer.PostDate,
                 DayAvailableFrom = offer.DayAvailableFrom,
                 DayAvailableTo = offer.DayAvailableTo,
                 HourAvailableFrom = offer.HourAvailableFrom,

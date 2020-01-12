@@ -178,6 +178,7 @@ namespace OO_Backend.Models
 
         public OfferServicesAdModel AddOfferServicesAd(OfferAdBodyModel ad)
         {
+            ad.PostDate = DateTime.Now;
             var offer = OfferServicesAds.Add(Converters.OfferAdBodyToOfferAdModel(ad)).Entity;
             this.SaveChanges();
             ad.Neighborhoods.ForEach(neighborhood =>
@@ -197,13 +198,14 @@ namespace OO_Backend.Models
                     NeighborhoodId = neighborhoodId,
                     OfferId = offer.Id
                 });
-            });
+            });            
             this.SaveChanges();
             return offer;
         }
 
         public void AddRequestServicesAd(RequestServicesAdModel ad)
         {
+            ad.PostDate = DateTime.Now;
             RequestServicesAds.Add(ad);
             /*if (!NeighborhoodExists(ad.Neighborhood))
             {

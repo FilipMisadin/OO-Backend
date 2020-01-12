@@ -15,7 +15,7 @@ namespace OO_Backend.Models
         [Required(ErrorMessage = "User Id is required")]
         public int UserId { get; set; }
         public string Body { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime PostDate { get; set; }
         public WeekDay DayAvailableFrom { get; set; }
         public WeekDay DayAvailableTo { get; set; }
         public List<string> Neighborhoods { get; set; }

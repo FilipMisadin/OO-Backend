@@ -16,7 +16,6 @@ namespace OO_Backend.Models
         public int UserId { get; set; }
         public string Neighborhood { get; set; }
         public string Body { get; set; }
-        [Column("Date")]
         public DateTime PostDate { get; set; }
         //public DateTime RequestDate { get; set; }
         public int HourFrom { get; set; }
@@ -32,7 +31,7 @@ namespace OO_Backend.Models
                 Id = this.Id,
                 Body = this.Body,
                 Neighborhood = this.Neighborhood,
-                Date = this.PostDate,
+                PostDate = this.PostDate,
                 HourFrom = this.HourFrom,
                 HourTo = this.HourTo
             };

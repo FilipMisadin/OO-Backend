@@ -30,7 +30,7 @@ namespace OO_Backend.Models
             {
                 Id = this.Id,
                 Body = this.Body,
-                Date = this.PostDate,
+                PostDate = this.PostDate,
                 DayAvailableFrom = this.DayAvailableFrom,
                 DayAvailableTo = this.DayAvailableTo,
                 HourAvailableFrom = this.HourAvailableFrom,

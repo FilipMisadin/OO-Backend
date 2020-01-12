@@ -12,7 +12,7 @@ namespace OO_Backend.Responses
         public ShortUserResponse User { get; set; }
         public string Neighborhood { get; set; }
         public string Body { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime PostDate { get; set; }
         public int HourFrom { get; set; }
         public int HourTo { get; set; }
         public DogModel Dog { get; set; }

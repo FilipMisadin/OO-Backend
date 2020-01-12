@@ -137,7 +137,7 @@ namespace OO_Backend
             {
                 Id = offerAd.Id,
                 Body = offerAd.Body,
-                Date = offerAd.PostDate,
+                PostDate = offerAd.PostDate,
                 DayAvailableFrom = offerAd.DayAvailableFrom,
                 DayAvailableTo = offerAd.DayAvailableTo,
                 HourAvailableFrom = offerAd.HourAvailableFrom,
@@ -158,7 +158,7 @@ namespace OO_Backend
                 Id = requestAd.Id,
                 Body = requestAd.Body,
                 Neighborhood = requestAd.Neighborhood,
-                Date = requestAd.PostDate,
+                PostDate = requestAd.PostDate,
                 HourFrom = requestAd.HourFrom,
                 HourTo = requestAd.HourTo
             };

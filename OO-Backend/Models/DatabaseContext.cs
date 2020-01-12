@@ -33,6 +33,12 @@ namespace OO_Backend.Models
                     v => v.ToString(),
                     v => (NotificationStatus)Enum.Parse(typeof(NotificationStatus), v));
             modelBuilder
+                .Entity<RequestNotificationModel>()
+                .Property(p => p.Status)
+                .HasConversion(
+                    v => v.ToString(),
+                    v => (NotificationStatus)Enum.Parse(typeof(NotificationStatus), v));
+            modelBuilder
                 .Entity<OfferServicesAdModel>()
                 .Property(p => p.DayAvailableFrom)
                 .HasConversion(
@@ -225,6 +231,7 @@ namespace OO_Backend.Models
 
         public int AddOfferNotification(OfferNotificationModel notification)
         {
+            notification.PostDate = DateTime.Now;
             var entity = OfferNotifications.Add(notification).Entity;
             this.SaveChanges();
             return entity.Id;
@@ -232,6 +239,7 @@ namespace OO_Backend.Models
 
         public int AddRequestNotification(RequestNotificationModel notification)
         {
+            notification.PostDate = DateTime.Now;
             var entity = RequestNotifications.Add(notification).Entity;
             this.SaveChanges();
             return entity.Id;

@@ -34,7 +34,7 @@ namespace OO_Backend.Controllers
             var response = new List<UnauthorizedUserResponse>();
             foreach (var user in users)
             {
-                response.Add(Converters.UserModelToUnauthorizedUserResponse(_database.GetUser(user.Id), _database));
+                response.Add(_database.GetUser(user.Id).ToUnauthorizedResponse(_database));
             }
 
             return Ok(response);
@@ -44,7 +44,7 @@ namespace OO_Backend.Controllers
         [Route("user")]
         public IActionResult GetAuthorizedUser()
         {
-            return Ok(Converters.UserModelToUserResponse(_database.GetUser(User.Identity.Name), _database));            
+            return Ok(_database.GetUser(User.Identity.Name).ToResponse(_database));            
         }
 
         [HttpGet]
@@ -159,38 +159,42 @@ namespace OO_Backend.Controllers
 
             return NoContent();
         }
-        /*
+        
         [HttpGet]
-        [Route("user/{userId}/notifications")]
-        public List<OfferNotificationResponse> GetNotifications(int userId)
+        [Route("user/{userId}/offerNotifications")]
+        public List<OfferNotificationResponse> GetOfferNotifications(int userId)
         {
-            var notifications = _database.GetUserNotifications(userId);
+            var notifications = _database.GetUserOfferNotifications(userId);
 
-            var response = new List<OfferNotificationResponse>();
+            return notifications;
+        }
 
-            notifications.ForEach(notification =>
-            {
-                response.Add(Converters.NotificationModelToNotificationResponse(notification, _database));
-            });
+        [HttpGet]
+        [Route("user/{userId}/requestNotifications")]
+        public List<RequestNotificationResponse> GetRequestNotifications(int userId)
+        {
+            var notifications = _database.GetUserRequestNotifications(userId);
+
+            return notifications;
+        }
+
+        [HttpGet]
+        [Route("user/{userId}/offerResponds")]
+        public List<OfferNotificationResponse> GetOfferResponds(int userId)
+        {
+            var response = _database.GetUserOfferResponds(userId);
 
             return response;
         }
 
         [HttpGet]
-        [Route("user/{userId}/responds")]
-        public List<RespondResponse> GetResponds(int userId)
+        [Route("user/{userId}/requestResponds")]
+        public List<RequestNotificationResponse> GetRequestResponds(int userId)
         {
-            var responds = _database.GetUserResponds(userId);
-
-            var response = new List<RespondResponse>();
-
-            responds.ForEach(respond =>
-            {
-                response.Add(Converters.NotificationModelToRespondResponse(respond, _database));
-            });
+            var response = _database.GetUserRequestResponds(userId);
 
             return response;
-        }*/
+        }
 
         [HttpGet]
         [Route("user/{userId}/offerAds")]

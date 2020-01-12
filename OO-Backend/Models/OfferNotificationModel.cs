@@ -20,29 +20,25 @@ namespace OO_Backend.Models
         public int SendUserId { get; set; }
         [Required(ErrorMessage = "Receive User Id is required")]
         public int ReceivedUserId { get; set; }
+        public int RequestAdId { get; set; }
         [Required(ErrorMessage = "Status is required")]
         public NotificationStatus Status { get; set; }
-        public int RequestAdId { get; set; }
+        public DateTime PostDate { get; set; }
 
 
-        /*public OfferNotificationResponse ToResponse()
+        public OfferNotificationResponse ToResponse(DatabaseContext database)
         {
             var response = new OfferNotificationResponse
             {
                 Id = this.Id,
-                SendUser = UserModelToShortUserResponse(database.GetUser(notification.SendUserId)),
-                ReceivedUserId = notification.ReceivedUserId,
-                Type = notification.Type,
-                Status = notification.Status,
-                Dog = database.GetDog(requestData.DogId),
-                Date = requestData.Date,
-                TimeFrom = requestData.TimeFrom,
-                TimeTo = requestData.TimeTo,
-                MeetAddress = requestData.MeetAddress,
-                AdNumber = notification.Type + "#" + notification.AdId.ToString().PadLeft(4, '0')
+                SendUser = database.GetUser(this.SendUserId).ToShortResponse(),
+                ReceivedUser = database.GetUser(this.ReceivedUserId).ToShortResponse(),
+                RequestAd = database.GetRequestServicesAd(this.RequestAdId).ToResponse(database),
+                Status = this.Status,
+                PostDate = this.PostDate
             };
 
             return response;
-        }*/
+        }
     }
 }

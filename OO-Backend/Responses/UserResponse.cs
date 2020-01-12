@@ -10,8 +10,9 @@ namespace OO_Backend.Responses
     {
         public UserResponse(long id, string username, string emailAddress, string imageUrl,
             string firstName, string lastName, DateTime birthDate, double rating,
-            List<DogModel> dogs, List<ReviewResponse> reviews/*, List<OfferNotificationResponse> notifications,
-            List<RespondResponse> responds*/)
+            List<DogModel> dogs, List<ReviewResponse> reviews, List<OfferNotificationResponse> offerNotifications,
+            List<RequestNotificationResponse> requestNotifications,
+            List<OfferNotificationResponse> offerResponds, List<RequestNotificationResponse> requestResponds)
         {
             Id = id;
             Username = username;
@@ -22,9 +23,11 @@ namespace OO_Backend.Responses
             BirthDate = birthDate;
             Dogs = dogs;
             Reviews = reviews;
-            //Notifications = notifications;
+            OfferNotifications = offerNotifications;
+            RequestNotifications = requestNotifications;
+            OfferResponds = offerResponds;
+            RequestResponds = requestResponds;
             Rating = rating;
-            //Responds = responds;
         }
 
         public long Id { get; set; }
@@ -37,7 +40,9 @@ namespace OO_Backend.Responses
         public DateTime BirthDate { get; set; }
         public List<DogModel> Dogs { get; set; }
         public List<ReviewResponse> Reviews { get; set; }
-        //public List<OfferNotificationResponse> Notifications { get; set; }
-        //public List<RespondResponse> Responds { get; set; }
+        public List<OfferNotificationResponse> OfferNotifications { get; set; }
+        public List<RequestNotificationResponse> RequestNotifications { get; set; }
+        public List<OfferNotificationResponse> OfferResponds { get; set; }
+        public List<RequestNotificationResponse> RequestResponds { get; set; }
     }
 }

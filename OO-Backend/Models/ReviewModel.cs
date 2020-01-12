@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OO_Backend.Responses;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -20,5 +21,22 @@ namespace OO_Backend.Models
         [Range(1, 5, ErrorMessage = "Mark must be between 1 and 5")]
         public int Mark { get; set; }
         public DateTime Date { get; set; }
+
+
+        public ReviewResponse ToResponse(DatabaseContext database)
+        {
+            var sendUser = database.GetUser(this.SendUserId);
+            ReviewResponse reviewResponse = new ReviewResponse
+            {
+                Id = this.Id,
+                SendUser = sendUser.ToShortResponse(),
+                ReceiveUserId = this.ReceiveUserId,
+                Body = this.Body,
+                Mark = this.Mark,
+                Date = this.Date
+            };
+
+            return reviewResponse;
+        }
     }
 }

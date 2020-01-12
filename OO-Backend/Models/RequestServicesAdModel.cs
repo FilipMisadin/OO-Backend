@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OO_Backend.Responses;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -22,5 +23,24 @@ namespace OO_Backend.Models
         public int HourTo { get; set; }
         [Required(ErrorMessage = "Dog Id is required")]
         public int DogId { get; set; }
+
+
+        public RequestAdResponse ToResponse(DatabaseContext database)
+        {
+            RequestAdResponse response = new RequestAdResponse
+            {
+                Id = this.Id,
+                Body = this.Body,
+                Neighborhood = this.Neighborhood,
+                Date = this.PostDate,
+                HourFrom = this.HourFrom,
+                HourTo = this.HourTo
+            };
+
+            response.User = database.GetUser(this.UserId).ToShortResponse();
+            response.Dog = database.GetDog(this.DogId);
+
+            return response;
+        }
     }
 }

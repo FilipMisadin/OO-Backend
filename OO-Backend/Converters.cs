@@ -9,52 +9,6 @@ namespace OO_Backend
 {
     public class Converters
     {
-        public static UserResponse UserModelToUserResponse(UserModel user, DatabaseContext database)
-        {
-            var response = new UserResponse(user.Id, user.Username, user.EmailAddress, user.ImageUrl,
-                user.FirstName, user.LastName, user.BirthDate, user.Rating,
-                new List<DogModel>(), new List<ReviewResponse>()/*, new List<OfferNotificationResponse>(), new List<RespondResponse>()*/);
-
-            var dogs = database.GetUserDogs(user.Id);
-            response.Dogs.AddRange(dogs);
-
-            var reviews = database.GetUserReviews(user.Id);
-            response.Reviews.AddRange(reviews);
-
-            /*var notifications = database.GetUserNotifications(user.Id);
-            List<OfferNotificationResponse> notificationResponses = new List<OfferNotificationResponse>();
-
-            notifications.ForEach(notification =>
-            {
-                notificationResponses.Add(NotificationModelToNotificationResponse(notification, database));
-            });
-            response.Notifications.AddRange(notificationResponses);
-
-            var responds = database.GetUserResponds(user.Id);
-            List<RespondResponse> respondResponses = new List<RespondResponse>();
-
-            responds.ForEach(respond =>
-            {
-                respondResponses.Add(NotificationModelToRespondResponse(respond, database));
-            });
-            response.Responds.AddRange(respondResponses);*/
-
-            return response;
-        }
-
-        public static ShortUserResponse UserModelToShortUserResponse(UserModel user)
-        {
-            var response = new ShortUserResponse
-            {
-                Id = user.Id,
-                Username = user.Username,
-                ImageUrl = user.ImageUrl,
-                Rating = user.Rating
-            };
-
-            return response;
-        }
-
         public static UnauthorizedUserResponse UserModelToUnauthorizedUserResponse(UserModel user, DatabaseContext database)
         {
             var response = new UnauthorizedUserResponse 
@@ -129,20 +83,7 @@ namespace OO_Backend
             return response;
         }*/
 
-        public static ReviewResponse ReviewModelToReviewResponse(ReviewModel review, DatabaseContext database)
-        {
-            var sendUser = database.GetUser(review.SendUserId);
-            ReviewResponse reviewResponse = new ReviewResponse
-            {
-                Id = review.Id,
-                SendUser = UserModelToShortUserResponse(sendUser),
-                ReceiveUserId = review.ReceiveUserId,
-                Body = review.Body,
-                Mark = review.Mark
-            };
-
-            return reviewResponse;
-        }
+       
 
         /*public static RequestNotificationModel NotificationBodyModelToRequestNotificationModel(OfferNotificationBodyModel notification)
         {
@@ -203,7 +144,7 @@ namespace OO_Backend
                 HourAvailableTo = offerAd.HourAvailableTo
             };
 
-            responseOffer.User = UserModelToShortUserResponse(database.GetUser(offerAd.UserId));
+            responseOffer.User = database.GetUser(offerAd.UserId).ToShortResponse();
 
             responseOffer.Neighborhoods = database.GetOfferNeighborhoods(offerAd.Id).Select(i => i.Name).ToList();
 
@@ -222,7 +163,7 @@ namespace OO_Backend
                 HourTo = requestAd.HourTo
             };
 
-            response.User = UserModelToShortUserResponse(database.GetUser(requestAd.UserId));
+            response.User = database.GetUser(requestAd.UserId).ToShortResponse();
             response.Dog = database.GetDog(requestAd.DogId);
 
             return response;

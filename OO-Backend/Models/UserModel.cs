@@ -37,10 +37,33 @@ namespace OO_Backend.Models
             return response;
         }
 
-        /*public UserResponse ToResponse()
+        public UserResponse ToResponse(DatabaseContext database)
         {
+            var response = new UserResponse(this.Id, this.Username, this.EmailAddress, this.ImageUrl,
+               this.FirstName, this.LastName, this.BirthDate, this.Rating,
+               new List<DogModel>(), new List<ReviewResponse>(), new List<OfferNotificationResponse>()
+               , new List<RequestNotificationResponse>(), new List<OfferNotificationResponse>(), new List<RequestNotificationResponse>());
 
-        }*/
+            var dogs = database.GetUserDogs(this.Id);
+            response.Dogs.AddRange(dogs);
+
+            var reviews = database.GetUserReviews(this.Id);
+            response.Reviews.AddRange(reviews);
+
+            var offerNotifications = database.GetUserOfferNotifications(this.Id);
+            response.OfferNotifications.AddRange(offerNotifications);
+
+            var requestNotifications = database.GetUserRequestNotifications(this.Id);
+            response.RequestNotifications.AddRange(requestNotifications);
+
+            var offerResponds = database.GetUserOfferResponds(this.Id);
+            response.OfferResponds.AddRange(offerResponds);
+
+            var requestResponds = database.GetUserRequestResponds(this.Id);
+            response.RequestResponds.AddRange(requestResponds);
+
+            return response;
+        }
 
         public UnauthorizedUserResponse ToUnauthorizedResponse(DatabaseContext database)
         {

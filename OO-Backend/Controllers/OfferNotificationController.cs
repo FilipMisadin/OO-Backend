@@ -14,66 +14,66 @@ namespace OO_Backend.Controllers
     [ApiController]
     [Authorize]
     [Route("api")]
-    public class NotificationController : ControllerBase
+    public class OfferNotificationController : ControllerBase
     {
-        private readonly ILogger<NotificationController> _logger;
+        private readonly ILogger<OfferNotificationController> _logger;
         private readonly DatabaseContext _database;
 
-        public NotificationController(ILogger<NotificationController> logger, DatabaseContext context)
+        public OfferNotificationController(ILogger<OfferNotificationController> logger, DatabaseContext context)
         {
             _logger = logger;
             _database = context;
         }
-        /*
+        
         [HttpPost]
-        [Route("notification/{id}/accept")]
-        public IActionResult AcceptNotification(int id)
+        [Route("offerNotification/{id}/accept")]
+        public IActionResult AcceptOfferNotification(int id)
         {
-            if (!_database.NotificationExists(id))
+            if (!_database.OfferNotificationExists(id))
             {
                 return BadRequest(Constants.NotificationDoesntExistError);
             }
 
             var ownerId = Convert.ToInt32(_database.GetUser(User.Identity.Name).Id);
-            var notification = _database.GetNotification(id);
+            var notification = _database.GetOfferNotification(id);
 
             if (notification.ReceivedUserId != ownerId)
             {
                 return Unauthorized();
             }
 
-            _database.AcceptNotification(id);
+            _database.AcceptOfferNotification(id);
             return Ok(notification);
         }
 
         [HttpPost]
-        [Route("notification/{id}/decline")]
-        public IActionResult DeclineNotification(int id)
+        [Route("offerNotification/{id}/decline")]
+        public IActionResult DeclineOfferNotification(int id)
         {
-            if (!_database.NotificationExists(id))
+            if (!_database.OfferNotificationExists(id))
             {
                 return BadRequest(Constants.NotificationDoesntExistError);
             }
 
             var ownerId = Convert.ToInt32(_database.GetUser(User.Identity.Name).Id);
-            var notification = _database.GetNotification(id);
+            var notification = _database.GetOfferNotification(id);
 
             if (notification.ReceivedUserId != ownerId)
             {
                 return Unauthorized();
             }
 
-            _database.DeclineNotification(id);
+            _database.DeclineOfferNotification(id);
             return Ok(notification);
         }
 
         [HttpGet]
-        [Route("notification/{id}")]
-        public IActionResult GetNotification(int id)
+        [Route("offerNotification/{id}")]
+        public IActionResult GetOfferNotification(int id)
         {
-            if (_database.NotificationExists(id))
+            if (_database.OfferNotificationExists(id))
             {
-                var notification = _database.GetNotification(id);
+                var notification = _database.GetOfferNotification(id);
 
                 if(_database.IsOwner(notification.ReceivedUserId, User))
                 {
@@ -88,8 +88,8 @@ namespace OO_Backend.Controllers
         }
         
         [HttpPost]
-        [Route("notification")]
-        public IActionResult AddNotification([FromBody] OfferNotificationBodyModel notification)
+        [Route("offerNotification")]
+        public IActionResult AddOfferNotification([FromBody] OfferNotificationModel notification)
         {
             if (!_database.UserExists(notification.ReceivedUserId))
             {
@@ -106,11 +106,7 @@ namespace OO_Backend.Controllers
             notification.SendUserId = ownerId;
 
             _logger.LogInformation("Add notification for notificationId: {notification}", notification.Id);
-            var notificationId = _database.AddNotification(Converters.NotificationBodyModelToNotificationModel(notification));
-            if(notification.DogId != 0)
-            {
-                _database.AddRequestNotification(Converters.NotificationBodyModelToRequestNotificationModel(notification), notificationId);
-            }
+            var notificationId = _database.AddOfferNotification(notification);
             notification.Id = notificationId;
             return Ok(notification);
         }
@@ -119,15 +115,15 @@ namespace OO_Backend.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut]
-        [Route("notification/{id}")]
-        public IActionResult PutNotification(int id,[FromBody] OfferNotificationBodyModel notification)
+        [Route("offerNotification/{id}")]
+        public IActionResult PutNotification(int id,[FromBody] OfferNotificationModel notification)
         {
             if (id != notification.Id)
             {
                 return BadRequest();
             }
 
-            if (!_database.NotificationExists(id))
+            if (!_database.OfferNotificationExists(id))
             {
                 return NotFound();
             }
@@ -136,12 +132,11 @@ namespace OO_Backend.Controllers
             {
                 try
                 {
-                    _database.UpdateNotification(Converters.NotificationBodyModelToNotificationModel(notification));
-                    _database.UpdateRequestNotification(Converters.NotificationBodyModelToRequestNotificationModel(notification));
+                    _database.UpdateOfferNotification(notification);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_database.NotificationExists(id))
+                    if (!_database.OfferNotificationExists(id))
                     {
                         return NotFound();
                     }
@@ -162,18 +157,18 @@ namespace OO_Backend.Controllers
 
         // DELETE: api/notification/5
         [HttpDelete]
-        [Route("notification/{id}")]
+        [Route("offerNotification/{id}")]
         public ActionResult<OfferNotificationModel> DeleteNotification(int id)
         {
-            if (_database.NotificationExists(id))
+            if (_database.OfferNotificationExists(id))
             {
                 return NotFound();
             }
-            var notification = _database.GetNotification(id);
+            var notification = _database.GetOfferNotification(id);
 
             if (_database.IsOwner(notification.SendUserId, User))
             {
-                _database.RemoveNotification(notification);
+                _database.RemoveOfferNotification(notification);
             }
             else
             {
@@ -181,6 +176,6 @@ namespace OO_Backend.Controllers
             }
 
             return NoContent();
-        }*/
+        }
     }
 }

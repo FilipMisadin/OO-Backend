@@ -646,6 +646,7 @@ namespace OO_Backend.Models
         public void UpdateUserRating(long userId, float rating)
         {
             GetUser(userId).Rating = rating;
+            this.SaveChanges();
         }
     }
 }

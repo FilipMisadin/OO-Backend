@@ -159,6 +159,7 @@ namespace OO_Backend
                 Body = requestAd.Body,
                 Neighborhood = requestAd.Neighborhood,
                 PostDate = requestAd.PostDate,
+                MeetDate = requestAd.MeetDate,
                 HourFrom = requestAd.HourFrom,
                 HourTo = requestAd.HourTo
             };

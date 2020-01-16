@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -31,11 +29,7 @@ namespace OO_Backend.Controllers
         public IActionResult GetUsers()
         {
             var users = _database.GetUsers();
-            var response = new List<UnauthorizedUserResponse>();
-            foreach (var user in users)
-            {
-                response.Add(_database.GetUser(user.Id).ToUnauthorizedResponse(_database));
-            }
+            var response = users.Select(user => _database.GetUser(user.Id).ToUnauthorizedResponse(_database)).ToList();
 
             return Ok(response);
         }
@@ -54,7 +48,7 @@ namespace OO_Backend.Controllers
         {
             if (_database.UserExists(id))
             {
-                return Ok(Converters.UserModelToUnauthorizedUserResponse(_database.GetUser(id), _database));
+                return Ok(_database.GetUser(id).ToUnauthorizedResponse(_database));
             } else
             {
                 return NotFound();
@@ -123,10 +117,8 @@ namespace OO_Backend.Controllers
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+
+                    throw;
                 }
             }
             else
@@ -207,7 +199,7 @@ namespace OO_Backend.Controllers
 
             offers.ForEach(offer =>
             {
-                response.Add(Converters.OfferAdModelToOfferAdResponse(offer, _database));
+                response.Add(offer.ToResponse(_database));
             });
 
             return response;
@@ -224,7 +216,7 @@ namespace OO_Backend.Controllers
 
             requests.ForEach(request =>
             {
-                response.Add(Converters.RequestAdModelToRequestAdResponse(request, _database));
+                response.Add(request.ToResponse(_database));
             });
 
             return response;

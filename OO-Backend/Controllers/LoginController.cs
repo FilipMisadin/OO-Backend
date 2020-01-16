@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using OO_Backend.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -31,7 +26,7 @@ namespace OO_Backend.Controllers
         [Route("auth")]
         public IActionResult Login(string username, string pass)
         {
-            UserModel login = new UserModel
+            var login = new UserModel
             {
                 Username = username,
                 Password = pass
@@ -40,11 +35,9 @@ namespace OO_Backend.Controllers
 
             var user = AuthenticateUser(login);
 
-            if(user != null)
-            {
-                var tokenStr = GenerateJSONWebToken(user);
-                response = Ok(new { token = tokenStr });
-            }
+            if (user == null) return response;
+            var tokenStr = GenerateJsonWebToken(user);
+            response = Ok(new { token = tokenStr });
 
             return response;
         }
@@ -54,12 +47,12 @@ namespace OO_Backend.Controllers
             UserModel user = null;
             if (_database.UsernameExists(login.Username))
             {
-                user = _database.GetUsers().Find(user => user.Username == login.Username);
+                user = _database.GetUsers().Find(userModel => userModel.Username == login.Username);
             }
             return user;
         }
 
-        private string GenerateJSONWebToken(UserModel user)
+        private string GenerateJsonWebToken(UserModel user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);

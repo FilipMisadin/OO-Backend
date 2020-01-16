@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using OO_Backend.Models;
 using Microsoft.EntityFrameworkCore;
 using OO_Backend.Responses;
 using OO_Backend.Enums;
@@ -21,7 +20,7 @@ namespace OO_Backend.Models
         public DbSet<NeighborhoodModel> Neighborhoods { get; set; }
         public DbSet<OfferToNeighborhood> OfferToNeighborhood { get; set; }
 
-        public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
+        public DatabaseContext(DbContextOptions options) : base(options)
         { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -78,7 +77,6 @@ namespace OO_Backend.Models
 
             Users.Update(user);
             this.SaveChanges();
-            return;
         }
 
         public void UpdateDog(DogModel dog)
@@ -86,17 +84,16 @@ namespace OO_Backend.Models
             Entry(GetDogs().Find(o => o.Id == dog.Id)).State = EntityState.Detached;
             Dogs.Update(dog);
             this.SaveChanges();
-            return;
         }
 
         public OfferServicesAdModel UpdateOfferServicesAd(OfferAdBodyModel ad)
         {
             Entry(GetOfferServicesAds().Find(o => o.Id == ad.Id)).State = EntityState.Detached;
-            var offer = OfferServicesAds.Update(Converters.OfferAdBodyToOfferAdModel(ad)).Entity;
+            var offer = OfferServicesAds.Update(ad.ToModel()).Entity;
             this.SaveChanges();
             ad.Neighborhoods.ForEach(neighborhood =>
             {
-                var neighborhoodId = 0;
+                int neighborhoodId;
                 if (!NeighborhoodExists(neighborhood))
                 {
                     var neighborhoodModel = new NeighborhoodModel { Id = 0, Name = neighborhood };
@@ -125,7 +122,6 @@ namespace OO_Backend.Models
             Entry(GetRequestServicesAds().Find(o => o.Id == ad.Id)).State = EntityState.Detached;
             RequestServicesAds.Update(ad);
             this.SaveChanges();
-            return;
         }
 
         public void UpdateReview(ReviewModel review)
@@ -133,7 +129,6 @@ namespace OO_Backend.Models
             Entry(GetReviews().Find(o => o.Id == review.Id)).State = EntityState.Detached;
             Reviews.Update(review);
             this.SaveChanges();
-            return;
         }
 
         public void UpdateOfferNotification(OfferNotificationModel notification)
@@ -141,7 +136,6 @@ namespace OO_Backend.Models
             Entry(GetOfferNotifications().Find(o => o.Id == notification.Id)).State = EntityState.Detached;
             OfferNotifications.Update(notification);
             this.SaveChanges();
-            return;
         }
 
         public void UpdateRequestNotification(RequestNotificationModel requestNotification)
@@ -149,7 +143,6 @@ namespace OO_Backend.Models
             Entry(GetRequestNotifications().Find(o => o.Id == requestNotification.Id)).State = EntityState.Detached;
             RequestNotifications.Update(requestNotification);
             this.SaveChanges();
-            return;
         }
 
         public int UpdateNeighborhood(NeighborhoodModel neighborhood)
@@ -165,31 +158,28 @@ namespace OO_Backend.Models
             Entry(GetOfferToNeighborhoods().Find(o => o.NeighborhoodId == offerToNeighborhood.NeighborhoodId && o.OfferId == offerToNeighborhood.OfferId)).State = EntityState.Detached;
             OfferToNeighborhood.Update(offerToNeighborhood);
             this.SaveChanges();
-            return;
         }
 
         public void AddUser(UserModel user)
         {
             Users.Add(user);
             this.SaveChanges();
-            return;
         }
 
         public void AddDog(DogModel dog)
         {
             Dogs.Add(dog);
             this.SaveChanges();
-            return;
         }
 
         public OfferServicesAdModel AddOfferServicesAd(OfferAdBodyModel ad)
         {
             ad.PostDate = DateTime.Now;
-            var offer = OfferServicesAds.Add(Converters.OfferAdBodyToOfferAdModel(ad)).Entity;
+            var offer = OfferServicesAds.Add(ad.ToModel()).Entity;
             this.SaveChanges();
             ad.Neighborhoods.ForEach(neighborhood =>
             {
-                var neighborhoodId = 0;
+                int neighborhoodId;
                 if (!NeighborhoodExists(neighborhood))
                 {
                     var neighborhoodModel = new NeighborhoodModel { Id = 0, Name = neighborhood };
@@ -213,20 +203,13 @@ namespace OO_Backend.Models
         {
             ad.PostDate = DateTime.Now;
             RequestServicesAds.Add(ad);
-            /*if (!NeighborhoodExists(ad.Neighborhood))
-            {
-                var neighborhoodModel = new NeighborhoodModel { Id = 0, Name = ad.Neighborhood };
-                AddNeighborhood(neighborhoodModel);
-            }*/
             this.SaveChanges();
-            return;
         }
 
         public void AddReview(ReviewModel review)
         {
             Reviews.Add(review);
             this.SaveChanges();
-            return;
         }
 
         public int AddOfferNotification(OfferNotificationModel notification)
@@ -245,107 +228,80 @@ namespace OO_Backend.Models
             return entity.Id;
         }
 
-        public int AddNeighborhood(NeighborhoodModel neighborhood)
+        private int AddNeighborhood(NeighborhoodModel neighborhood)
         {
             var hood = Neighborhoods.Add(neighborhood);
             this.SaveChanges();
             return hood.Entity.Id;
         }
 
-        public void AddOfferToNeighborhood(OfferToNeighborhood offerToNeighborhood)
+        private void AddOfferToNeighborhood(OfferToNeighborhood offerToNeighborhood)
         {
             OfferToNeighborhood.Add(offerToNeighborhood);
             this.SaveChanges();
-            return;
         }
 
         public void RemoveUser(UserModel user)
         {
             var dogs = GetUserDogs(user.Id);
-            dogs.ForEach(dog => 
-            {
-                RemoveDog(dog);
-            });
+            dogs.ForEach(RemoveDog);
 
             var offerNotifications = GetUserRelatedOfferNotifications(user.Id);
-            offerNotifications.ForEach(notification =>
-            {
-                RemoveOfferNotification(notification);
-            });
+            offerNotifications.ForEach(RemoveOfferNotification);
 
             var requestNotifications = GetUserRelatedRequestNotifications(user.Id);
-            requestNotifications.ForEach(notification =>
-            {
-                RemoveRequestNotification(notification);
-            });
+            requestNotifications.ForEach(RemoveRequestNotification);
 
             var offerAds = GetUserOfferServicesAds(user.Id);
-            offerAds.ForEach(offerAd =>
-            {
-                RemoveOfferServicesAd(offerAd);
-            });
+            offerAds.ForEach(RemoveOfferServicesAd);
 
             var requestAds = GetUserRequestServicesAds(user.Id);
-            requestAds.ForEach(requestAd =>
-            {
-                RemoveRequestServicesAd(requestAd);
-            });
+            requestAds.ForEach(RemoveRequestServicesAd);
 
             var reviews = GetUserRelatedReviews(user.Id);
-            reviews.ForEach(review =>
-            {
-                RemoveReview(review);
-            });
+            reviews.ForEach(RemoveReview);
 
             Users.Remove(user);
             this.SaveChanges();
-            return;
         }
 
         public void RemoveDog(DogModel dog)
         {
             var requestAds = GetDogRequestServicesAds(dog.Id);
-            requestAds.ForEach(requestAd =>
-            {
-                RemoveRequestServicesAd(requestAd);
-            });
+            requestAds.ForEach(RemoveRequestServicesAd);
 
             var requestNotifications = GetDogRequestNotifications(dog.Id);
-            requestNotifications.ForEach(requestNotification =>
-            {
-                RemoveRequestNotification(requestNotification);
-            });
+            requestNotifications.ForEach(RemoveRequestNotification);
 
             Dogs.Remove(dog);
             this.SaveChanges();
-            return;
         }
 
         public void RemoveOfferServicesAd(OfferServicesAdModel ad)
         {
             var offerToNeighborhoods = GetOfferToNeighborhoodFromOffer(ad.Id);
-            offerToNeighborhoods.ForEach(offerToNeighborhood =>
-            {
-                 RemoveOfferToNeighborhood(offerToNeighborhood);
-            });
+            offerToNeighborhoods.ForEach(RemoveOfferToNeighborhood);
+
+            var requestNotifications = GetRequestNotificationsFromOffer(ad.Id);
+            requestNotifications.ForEach(RemoveRequestNotification);
 
             OfferServicesAds.Remove(ad);
             this.SaveChanges();
-            return;
         }
 
         public void RemoveRequestServicesAd(RequestServicesAdModel ad)
         {
+            var offerNotifications = GetOfferNotificationsFromOffer(ad.Id);
+            offerNotifications.ForEach(RemoveOfferNotification);
+
             RequestServicesAds.Remove(ad);
             this.SaveChanges();
-            return;
         }
 
         public void RemoveReview(ReviewModel review)
         {
             Reviews.Remove(review);
             this.SaveChanges();
-            return;
         }
 
         public void RemoveOfferNotification(OfferNotificationModel notification)
@@ -357,34 +313,27 @@ namespace OO_Backend.Models
 
             OfferNotifications.Remove(notification);
             this.SaveChanges();
-            return;
         }
 
         public void RemoveRequestNotification(RequestNotificationModel requestNotification)
         {
             RequestNotifications.Remove(requestNotification);
             this.SaveChanges();
-            return;
         }
 
         public void RemoveNeighborhood(NeighborhoodModel neighborhood)
         {
             var offerToNeighborhoods = GetOfferToNeighborhoodFromNeighborhood(neighborhood.Id);
-            offerToNeighborhoods.ForEach(offerToNeighborhood =>
-            {
-                RemoveOfferToNeighborhood(offerToNeighborhood);
-            });
+            offerToNeighborhoods.ForEach(RemoveOfferToNeighborhood);
 
             Neighborhoods.Remove(neighborhood);
             this.SaveChanges();
-            return;
         }
 
-        public void RemoveOfferToNeighborhood(OfferToNeighborhood offerToNeighborhood)
+        private void RemoveOfferToNeighborhood(OfferToNeighborhood offerToNeighborhood)
         {
             OfferToNeighborhood.Remove(offerToNeighborhood);
             this.SaveChanges();
-            return;
         }
 
         public void AcceptOfferNotification(long notificationId)
@@ -392,7 +341,6 @@ namespace OO_Backend.Models
             var notification = GetOfferNotification(notificationId);
             notification.Status = NotificationStatus.Accepted;
             UpdateOfferNotification(notification);
-            return;
         }
 
         public void AcceptRequestNotification(long notificationId)
@@ -400,7 +348,6 @@ namespace OO_Backend.Models
             var notification = GetRequestNotification(notificationId);
             notification.Status = NotificationStatus.Accepted;
             UpdateRequestNotification(notification);
-            return;
         }
 
         public void DeclineOfferNotification(long notificationId)
@@ -408,7 +355,6 @@ namespace OO_Backend.Models
             var notification = GetOfferNotification(notificationId);
             notification.Status = NotificationStatus.Declined;
             UpdateOfferNotification(notification);
-            return;
         }
 
         public void DeclineRequestNotification(long notificationId)
@@ -416,7 +362,6 @@ namespace OO_Backend.Models
             var notification = GetRequestNotification(notificationId);
             notification.Status = NotificationStatus.Declined;
             UpdateRequestNotification(notification);
-            return;
         }
 
         public UserModel GetUser(long id)
@@ -442,12 +387,22 @@ namespace OO_Backend.Models
             return responseList;
         }
 
-        public List<OfferToNeighborhood> GetOfferToNeighborhoodFromOffer(long offerId)
+        private List<OfferToNeighborhood> GetOfferToNeighborhoodFromOffer(long offerId)
         {
             return GetOfferToNeighborhoods().FindAll(o => o.OfferId == offerId);
         }
 
-        public List<OfferToNeighborhood> GetOfferToNeighborhoodFromNeighborhood(long neighborhoodId)
+        private List<RequestNotificationModel> GetRequestNotificationsFromOffer(long offerId)
+        {
+            return GetRequestNotifications().FindAll(o => o.OfferAdId == offerId);
+        }
+
+        private List<OfferNotificationModel> GetOfferNotificationsFromOffer(long offerId)
+        {
+            return GetOfferNotifications().FindAll(o => o.RequestAdId == offerId);
+        }
+
+        private List<OfferToNeighborhood> GetOfferToNeighborhoodFromNeighborhood(long neighborhoodId)
         {
             return GetOfferToNeighborhoods().FindAll(o => o.NeighborhoodId == neighborhoodId);
         }
@@ -480,7 +435,7 @@ namespace OO_Backend.Models
         public List<RequestNotificationResponse> GetUserRequestNotifications(long userId)
         {
             var responds = GetRequestNotifications().FindAll(notifications => notifications.ReceivedUserId == userId);
-            List<RequestNotificationResponse> respondResponses = new List<RequestNotificationResponse>();
+            var respondResponses = new List<RequestNotificationResponse>();
 
             responds.ForEach(respond =>
             {
@@ -492,7 +447,7 @@ namespace OO_Backend.Models
         public List<OfferNotificationResponse> GetUserOfferNotifications(long userId)
         {
             var responds = GetOfferNotifications().FindAll(notifications => notifications.ReceivedUserId == userId);
-            List<OfferNotificationResponse> respondResponses = new List<OfferNotificationResponse>();
+            var respondResponses = new List<OfferNotificationResponse>();
 
             responds.ForEach(respond =>
             {
@@ -501,17 +456,17 @@ namespace OO_Backend.Models
             return respondResponses;
         }
 
-        public List<RequestNotificationModel> GetDogRequestNotifications(long dogId)
+        private List<RequestNotificationModel> GetDogRequestNotifications(long dogId)
         {
             return GetRequestNotifications().FindAll(o => o.DogId == dogId);
         }
 
-        public List<OfferNotificationModel> GetUserRelatedOfferNotifications(long userId)
+        private List<OfferNotificationModel> GetUserRelatedOfferNotifications(long userId)
         {
             return GetOfferNotifications().FindAll(notifications => notifications.ReceivedUserId == userId || notifications.SendUserId == userId);
         }
 
-        public List<RequestNotificationModel> GetUserRelatedRequestNotifications(long userId)
+        private List<RequestNotificationModel> GetUserRelatedRequestNotifications(long userId)
         {
             return GetRequestNotifications().FindAll(notifications => notifications.ReceivedUserId == userId || notifications.SendUserId == userId);
         }
@@ -519,7 +474,7 @@ namespace OO_Backend.Models
         public List<OfferNotificationResponse> GetUserOfferResponds(long userId)
         {
             var responds = GetOfferNotifications().FindAll(notifications => notifications.SendUserId == userId);
-            List<OfferNotificationResponse> respondResponses = new List<OfferNotificationResponse>();
+            var respondResponses = new List<OfferNotificationResponse>();
 
             responds.ForEach(respond =>
             {
@@ -531,7 +486,7 @@ namespace OO_Backend.Models
         public List<RequestNotificationResponse> GetUserRequestResponds(long userId)
         {
             var responds = GetRequestNotifications().FindAll(notifications => notifications.SendUserId == userId);
-            List<RequestNotificationResponse> respondResponses = new List<RequestNotificationResponse>();
+            var respondResponses = new List<RequestNotificationResponse>();
 
             responds.ForEach(respond =>
             {
@@ -553,7 +508,7 @@ namespace OO_Backend.Models
             return response;
         }
 
-        public List<ReviewModel> GetUserRelatedReviews(long userId)
+        private List<ReviewModel> GetUserRelatedReviews(long userId)
         {
             return GetReviews().FindAll(review => review.ReceiveUserId == userId || review.SendUserId == userId);
         }
@@ -572,8 +527,8 @@ namespace OO_Backend.Models
         {
             return GetRequestServicesAds().FindAll(o => o.UserId == userId);
         }
-        
-        public List<RequestServicesAdModel> GetDogRequestServicesAds(long dogId)
+
+        private List<RequestServicesAdModel> GetDogRequestServicesAds(long dogId)
         {
             return GetRequestServicesAds().FindAll(o => o.DogId == dogId);
         }
@@ -603,7 +558,7 @@ namespace OO_Backend.Models
             return GetDogs().Any(e => e.Id == id);
         }
 
-        public bool NeighborhoodExists(string name)
+        private bool NeighborhoodExists(string name)
         {
             return GetNeighborhoods().Any(e => e.Name == name);
         }

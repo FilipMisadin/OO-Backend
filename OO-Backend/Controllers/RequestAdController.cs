@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -75,8 +73,6 @@ namespace OO_Backend.Controllers
         }
 
         // PUT: api/RequestAd/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut]
         [Route("requestAd/{id}")]
         public IActionResult PutRequestAd(long id, RequestServicesAdModel requestAd)
@@ -98,10 +94,8 @@ namespace OO_Backend.Controllers
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+
+                    throw;
                 }
             }
             else
@@ -141,11 +135,11 @@ namespace OO_Backend.Controllers
         {
             var ads = _database.GetRequestServicesAds();
 
-            List<RequestAdResponse> requests = new List<RequestAdResponse>();
+            var requests = new List<RequestAdResponse>();
 
             ads.ForEach(ad =>
             {
-                requests.Add(Converters.RequestAdModelToRequestAdResponse(ad, _database));
+                requests.Add(ad.ToResponse(_database));
             });
 
             return requests;

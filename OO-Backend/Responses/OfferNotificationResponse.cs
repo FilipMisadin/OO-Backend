@@ -1,9 +1,5 @@
 ﻿using OO_Backend.Enums;
-using OO_Backend.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace OO_Backend.Responses
 {

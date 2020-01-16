@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -29,16 +26,10 @@ namespace OO_Backend.Controllers
         [AllowAnonymous]
         public IActionResult GetReview(long id)
         {
-            if (_database.ReviewExists(id))
-            {
-                var review = _database.GetReview(id);
+            if (!_database.ReviewExists(id)) return NotFound();
+            var review = _database.GetReview(id);
 
-                return Ok(review);
-            }
-            else
-            {
-                return NotFound();
-            }
+            return Ok(review);
         }
 
         [HttpPost]
@@ -66,8 +57,6 @@ namespace OO_Backend.Controllers
         }
 
         // PUT: api/Review/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut]
         [Route("review/{id}")]
         public IActionResult PutReview(long id, ReviewModel review)
@@ -90,10 +79,8 @@ namespace OO_Backend.Controllers
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+
+                    throw;
                 }
             }
             else
@@ -138,7 +125,7 @@ namespace OO_Backend.Controllers
                 return;
             }
 
-            float sum = 0.0f;
+            var sum = 0.0f;
             reviews.ForEach(review =>
             {
                 sum += review.Mark;

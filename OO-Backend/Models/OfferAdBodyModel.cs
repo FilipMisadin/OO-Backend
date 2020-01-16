@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace OO_Backend.Models
 {
@@ -21,5 +19,22 @@ namespace OO_Backend.Models
         public List<string> Neighborhoods { get; set; }
         public int HourAvailableFrom { get; set; }
         public int HourAvailableTo { get; set; }
+
+        public OfferServicesAdModel ToModel()
+        {
+            var response = new OfferServicesAdModel
+            {
+                Id = this.Id,
+                UserId = this.UserId,
+                Body = this.Body,
+                PostDate = this.PostDate,
+                DayAvailableFrom = this.DayAvailableFrom,
+                DayAvailableTo = this.DayAvailableTo,
+                HourAvailableFrom = this.HourAvailableFrom,
+                HourAvailableTo = this.HourAvailableTo
+            };
+
+            return response;
+        }
     }
 }

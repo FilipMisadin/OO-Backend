@@ -1,10 +1,7 @@
 ﻿using OO_Backend.Responses;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace OO_Backend.Models
 {
@@ -26,7 +23,7 @@ namespace OO_Backend.Models
         public ReviewResponse ToResponse(DatabaseContext database)
         {
             var sendUser = database.GetUser(this.SendUserId);
-            ReviewResponse reviewResponse = new ReviewResponse
+            var reviewResponse = new ReviewResponse
             {
                 Id = this.Id,
                 SendUser = sendUser.ToShortResponse(),

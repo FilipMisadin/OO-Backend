@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OO_Backend.Models;
-using OO_Backend.Responses;
 
 namespace OO_Backend.Controllers
 {
@@ -112,8 +108,6 @@ namespace OO_Backend.Controllers
         }
 
         // PUT: api/notification/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut]
         [Route("offerNotification/{id}")]
         public IActionResult PutNotification(int id,[FromBody] OfferNotificationModel notification)
@@ -140,10 +134,8 @@ namespace OO_Backend.Controllers
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+
+                    throw;
                 }
             }
             else

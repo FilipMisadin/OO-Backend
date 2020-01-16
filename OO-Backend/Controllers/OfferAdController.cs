@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -64,8 +62,6 @@ namespace OO_Backend.Controllers
         }
 
         // PUT: api/offerAd/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut]
         [Route("offerAd/{id}")]
         public IActionResult PutOfferAd(long id, OfferAdBodyModel offerAd)
@@ -87,10 +83,8 @@ namespace OO_Backend.Controllers
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+
+                    throw;
                 }
             }
             else
@@ -128,11 +122,11 @@ namespace OO_Backend.Controllers
         {
             var ads = _database.GetOfferServicesAds();
 
-            List<OfferAdResponse> offers = new List<OfferAdResponse>();
+            var offers = new List<OfferAdResponse>();
 
             ads.ForEach(ad =>
             {
-                offers.Add(Converters.OfferAdModelToOfferAdResponse(ad, _database));
+                offers.Add(ad.ToResponse(_database));
             });
 
             return offers;

@@ -1,18 +1,13 @@
 ﻿using OO_Backend.Enums;
 using OO_Backend.Responses;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace OO_Backend.Models
 {
     public class RequestNotificationModel
     {
-        public RequestNotificationModel() { }
-
         [Column("RequestNotificationId")]
         public int Id { get; set; }
         public int SendUserId { get; set; }

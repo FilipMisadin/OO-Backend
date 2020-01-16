@@ -1,10 +1,7 @@
 ﻿using OO_Backend.Responses;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace OO_Backend.Models
 {
@@ -34,11 +31,11 @@ namespace OO_Backend.Models
                 PostDate = this.PostDate,
                 MeetDate = this.MeetDate,
                 HourFrom = this.HourFrom,
-                HourTo = this.HourTo
+                HourTo = this.HourTo,
+                User = database.GetUser(this.UserId).ToShortResponse(),
+                Dog = database.GetDog(this.DogId)
             };
 
-            response.User = database.GetUser(this.UserId).ToShortResponse();
-            response.Dog = database.GetDog(this.DogId);
 
             return response;
         }

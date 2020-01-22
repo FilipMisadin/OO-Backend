@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <UserSecretsId>0e769afc-1dfe-48a2-b319-75c56c1ac4c0</UserSecretsId>
     <PackageProjectUrl>https://localhost:44340/</PackageProjectUrl>
   </PropertyGroup>

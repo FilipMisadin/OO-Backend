@@ -40,7 +40,7 @@ namespace OO_Backend
             {
                 options.AddPolicy("CorsPolicy", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials());
             });
-            services.AddControllers().AddNewtonsoftJson();
+            services.AddControllersWithViews().AddNewtonsoftJson();
 
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -96,7 +96,9 @@ namespace OO_Backend
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=DogModels}/{action=Index}/{id?}");
             });
         }
     }

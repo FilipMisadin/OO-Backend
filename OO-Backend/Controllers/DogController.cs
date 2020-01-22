@@ -11,7 +11,7 @@ namespace OO_Backend.Controllers
     [ApiController]
     [Authorize]
     [Route("api")]
-    public class DogController : ControllerBase
+    public class DogController : Controller
     {
         private readonly ILogger<DogController> _logger;
         private readonly DatabaseContext _database;
@@ -20,6 +20,12 @@ namespace OO_Backend.Controllers
         {
             _logger = logger;
             _database = context;
+        }
+
+        [Route("testing")]
+        public ActionResult Test()
+        {
+            return View();
         }
 
         [HttpGet]

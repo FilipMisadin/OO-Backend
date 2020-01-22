@@ -1,8 +1,49 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>0e769afc-1dfe-48a2-b319-75c56c1ac4c0</UserSecretsId>
+    <PackageProjectUrl>https://localhost:44340/</PackageProjectUrl>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Styles\css\site.css" />
+    <Content Include="Styles\favicon.ico" />
+    <Content Include="Styles\js\site.js" />
+    <Content Include="Styles\lib\bootstrap\dist\css\bootstrap-grid.css" />
+    <Content Include="Styles\lib\bootstrap\dist\css\bootstrap-grid.css.map" />
+    <Content Include="Styles\lib\bootstrap\dist\css\bootstrap-grid.min.css" />
+    <Content Include="Styles\lib\bootstrap\dist\css\bootstrap-grid.min.css.map" />
+    <Content Include="Styles\lib\bootstrap\dist\css\bootstrap-reboot.css" />
+    <Content Include="Styles\lib\bootstrap\dist\css\bootstrap-reboot.css.map" />
+    <Content Include="Styles\lib\bootstrap\dist\css\bootstrap-reboot.min.css" />
+    <Content Include="Styles\lib\bootstrap\dist\css\bootstrap-reboot.min.css.map" />
+    <Content Include="Styles\lib\bootstrap\dist\css\bootstrap.css" />
+    <Content Include="Styles\lib\bootstrap\dist\css\bootstrap.css.map" />
+    <Content Include="Styles\lib\bootstrap\dist\css\bootstrap.min.css" />
+    <Content Include="Styles\lib\bootstrap\dist\css\bootstrap.min.css.map" />
+    <Content Include="Styles\lib\bootstrap\dist\js\bootstrap.bundle.js" />
+    <Content Include="Styles\lib\bootstrap\dist\js\bootstrap.bundle.js.map" />
+    <Content Include="Styles\lib\bootstrap\dist\js\bootstrap.bundle.min.js" />
+    <Content Include="Styles\lib\bootstrap\dist\js\bootstrap.bundle.min.js.map" />
+    <Content Include="Styles\lib\bootstrap\dist\js\bootstrap.js" />
+    <Content Include="Styles\lib\bootstrap\dist\js\bootstrap.js.map" />
+    <Content Include="Styles\lib\bootstrap\dist\js\bootstrap.min.js" />
+    <Content Include="Styles\lib\bootstrap\dist\js\bootstrap.min.js.map" />
+    <Content Include="Styles\lib\bootstrap\LICENSE" />
+    <Content Include="Styles\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.js" />
+    <Content Include="Styles\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Styles\lib\jquery-validation-unobtrusive\LICENSE.txt" />
+    <Content Include="Styles\lib\jquery-validation\dist\additional-methods.js" />
+    <Content Include="Styles\lib\jquery-validation\dist\additional-methods.min.js" />
+    <Content Include="Styles\lib\jquery-validation\dist\jquery.validate.js" />
+    <Content Include="Styles\lib\jquery-validation\dist\jquery.validate.min.js" />
+    <Content Include="Styles\lib\jquery-validation\LICENSE.md" />
+    <Content Include="Styles\lib\jquery\dist\jquery.js" />
+    <Content Include="Styles\lib\jquery\dist\jquery.min.js" />
+    <Content Include="Styles\lib\jquery\dist\jquery.min.map" />
+    <Content Include="Styles\lib\jquery\LICENSE.txt" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.0.0" />

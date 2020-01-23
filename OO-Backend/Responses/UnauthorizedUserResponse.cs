@@ -14,7 +14,7 @@ namespace OO_Backend.Responses
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime BirthDate { get; set; }
-        public List<DogModel> Dogs { get; set; }
+        public List<Dog> Dogs { get; set; }
         public List<ReviewResponse> Reviews { get; set; }
     }
 }

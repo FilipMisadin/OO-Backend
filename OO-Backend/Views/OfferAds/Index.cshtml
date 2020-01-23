@@ -1,0 +1,72 @@
+﻿@model IEnumerable<OO_Backend.Models.OfferAd>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UserId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Body)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PostDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DayAvailableFrom)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DayAvailableTo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HourAvailableFrom)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HourAvailableTo)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Body)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PostDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DayAvailableFrom)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DayAvailableTo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HourAvailableFrom)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HourAvailableTo)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

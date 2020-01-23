@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 namespace OO_Backend
 {
     public class Converters
-    {
-        public static UnauthorizedUserResponse UserModelToUnauthorizedUserResponse(UserModel user, DatabaseContext database)
+    {/*
+        public static UnauthorizedUserResponse UserModelToUnauthorizedUserResponse(User user, DatabaseContext database)
         {
             var response = new UnauthorizedUserResponse 
             {
@@ -113,10 +113,10 @@ namespace OO_Backend
 
             return response;
         }*/
-
-        public static OfferServicesAdModel OfferAdBodyToOfferAdModel(OfferAdBodyModel offer)
+        /*
+        public static OfferServicesAd OfferAdBodyToOfferAdModel(OfferAdBody offer)
         {
-            var response = new OfferServicesAdModel
+            var response = new OfferServicesAd
             {
                 Id = offer.Id,
                 UserId = offer.UserId,
@@ -131,7 +131,7 @@ namespace OO_Backend
             return response;
         }
 
-        public static OfferAdResponse OfferAdModelToOfferAdResponse(OfferServicesAdModel offerAd, DatabaseContext database)
+        public static OfferAdResponse OfferAdModelToOfferAdResponse(OfferServicesAd offerAd, DatabaseContext database)
         {
             OfferAdResponse responseOffer = new OfferAdResponse
             {
@@ -151,7 +151,7 @@ namespace OO_Backend
             return responseOffer;
         }
 
-        public static RequestAdResponse RequestAdModelToRequestAdResponse(RequestServicesAdModel requestAd, DatabaseContext database)
+        public static RequestAdResponse RequestAdModelToRequestAdResponse(RequestServicesAd requestAd, DatabaseContext database)
         {
             RequestAdResponse response = new RequestAdResponse
             {
@@ -168,6 +168,6 @@ namespace OO_Backend
             response.Dog = database.GetDog(requestAd.DogId);
 
             return response;
-        }
+        }*/
     }
 }

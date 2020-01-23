@@ -13,6 +13,6 @@ namespace OO_Backend.Responses
         public DateTime MeetDate { get; set; }
         public int HourFrom { get; set; }
         public int HourTo { get; set; }
-        public DogModel Dog { get; set; }
+        public Dog Dog { get; set; }
     }
 }

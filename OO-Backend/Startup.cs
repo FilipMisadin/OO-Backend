@@ -81,6 +81,7 @@ namespace OO_Backend
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseStaticFiles();
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
@@ -98,7 +99,7 @@ namespace OO_Backend
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=DogModels}/{action=Index}/{id?}");
+                    pattern: "{controller=Users}/{action=Index}/{id?}");
             });
         }
     }

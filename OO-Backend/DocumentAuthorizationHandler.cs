@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 namespace OO_Backend
 {
     public class DocumentAuthorizationHandler :
-    AuthorizationHandler<SameAuthorRequirement, UserModel>
+    AuthorizationHandler<SameAuthorRequirement, User>
     {
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
                                                        SameAuthorRequirement requirement,
-                                                       UserModel resource)
+                                                       User resource)
         {
             if (context.User.Identity?.Name == resource.Username)
             {

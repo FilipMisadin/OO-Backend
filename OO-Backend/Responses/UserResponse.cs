@@ -8,7 +8,7 @@ namespace OO_Backend.Responses
     {
         public UserResponse(long id, string username, string emailAddress, string imageUrl,
             string firstName, string lastName, DateTime birthDate, double rating,
-            List<DogModel> dogs, List<ReviewResponse> reviews, List<OfferNotificationResponse> offerNotifications,
+            List<Dog> dogs, List<ReviewResponse> reviews, List<OfferNotificationResponse> offerNotifications,
             List<RequestNotificationResponse> requestNotifications,
             List<OfferNotificationResponse> offerResponds, List<RequestNotificationResponse> requestResponds)
         {
@@ -36,7 +36,7 @@ namespace OO_Backend.Responses
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime BirthDate { get; set; }
-        public List<DogModel> Dogs { get; set; }
+        public List<Dog> Dogs { get; set; }
         public List<ReviewResponse> Reviews { get; set; }
         public List<OfferNotificationResponse> OfferNotifications { get; set; }
         public List<RequestNotificationResponse> RequestNotifications { get; set; }

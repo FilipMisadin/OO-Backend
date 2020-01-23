@@ -11,7 +11,7 @@ namespace OO_Backend.Responses
         public ShortUserResponse ReceivedUser { get; set; }
         public OfferAdResponse OfferAd { get; set; }
         public NotificationStatus Status { get; set; }
-        public DogModel Dog { get; set; }
+        public Dog Dog { get; set; }
         public DateTime PostDate { get; set; }
         public DateTime MeetDate { get; set; }
         public int TimeFrom { get; set; }

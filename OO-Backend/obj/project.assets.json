@@ -9398,11 +9398,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Misko\\Desktop\\OOBackend-Git\\OO-Backend\\OO-Backend\\OO_Backend.csproj",
+      "projectUniqueName": "C:\\Users\\Misko\\Desktop\\OOBackend-Git\\Restore\\OO-Backend\\OO-Backend\\OO_Backend.csproj",
       "projectName": "OO_Backend",
-      "projectPath": "C:\\Users\\Misko\\Desktop\\OOBackend-Git\\OO-Backend\\OO-Backend\\OO_Backend.csproj",
+      "projectPath": "C:\\Users\\Misko\\Desktop\\OOBackend-Git\\Restore\\OO-Backend\\OO-Backend\\OO_Backend.csproj",
       "packagesPath": "C:\\Users\\Misko\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Misko\\Desktop\\OOBackend-Git\\OO-Backend\\OO-Backend\\obj\\",
+      "outputPath": "C:\\Users\\Misko\\Desktop\\OOBackend-Git\\Restore\\OO-Backend\\OO-Backend\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Misko\\AppData\\Roaming\\NuGet\\NuGet.Config",

@@ -1,4 +1,5 @@
-﻿using OO_Backend.Responses;
+﻿using Newtonsoft.Json;
+using OO_Backend.Responses;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -19,6 +20,11 @@ namespace OO_Backend.Models
         public int Mark { get; set; }
         public DateTime Date { get; set; }
 
+
+        [JsonIgnore]
+        public User SendUser { set; get; }
+        [JsonIgnore]
+        public User ReceiveUser { set; get; }
 
         public ReviewResponse ToResponse(DatabaseContext database)
         {

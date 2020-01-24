@@ -1,4 +1,5 @@
-﻿using OO_Backend.Responses;
+﻿using Newtonsoft.Json;
+using OO_Backend.Responses;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -20,6 +21,10 @@ namespace OO_Backend.Models
         [Required(ErrorMessage = "Dog Id is required")]
         public int DogId { get; set; }
 
+        [JsonIgnore]
+        public User User { set; get; }
+        [JsonIgnore]
+        public Dog Dog { set; get; }
 
         public RequestAdResponse ToResponse(DatabaseContext database)
         {

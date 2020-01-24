@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +11,7 @@ namespace OO_Backend.Controllers
     [ApiController]
     [Authorize]
     [Route("api")]
-    public class DogApiController : Controller
+    public class DogApiController : ControllerBase
     {
         private readonly ILogger<DogApiController> _logger;
         private readonly DatabaseContext _database;

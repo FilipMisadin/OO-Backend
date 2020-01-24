@@ -51,6 +51,11 @@ namespace OO_Backend.Models
                     v => (WeekDay)Enum.Parse(typeof(WeekDay), v));
             modelBuilder.Entity<OfferToNeighborhood>()
                 .HasKey(c => new { c.NeighborhoodId, c.OfferId });
+
+            modelBuilder.Entity<User>()
+                .HasMany(c => c.Dogs)
+                .WithOne(e => e.Owner)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         public List<User> GetUsers() => Users.ToList();

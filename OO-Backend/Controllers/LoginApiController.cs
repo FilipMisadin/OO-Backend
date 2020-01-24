@@ -47,7 +47,9 @@ namespace OO_Backend.Controllers
             User user = null;
             if (_database.UsernameExists(login.Username))
             {
-                user = _database.GetUsers().Find(userModel => userModel.Username == login.Username);
+                user = _database.GetUser(login.Username);
+                if (user.Password != login.Password)
+                    return null;
             }
             return user;
         }

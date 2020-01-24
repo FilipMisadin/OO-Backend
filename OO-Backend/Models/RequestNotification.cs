@@ -1,4 +1,5 @@
-﻿using OO_Backend.Enums;
+﻿using Newtonsoft.Json;
+using OO_Backend.Enums;
 using OO_Backend.Responses;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -23,6 +24,13 @@ namespace OO_Backend.Models
         public int TimeTo { get; set; }
         public string MeetAddress { get; set; }
 
+
+        [JsonIgnore]
+        public User SendUser { set; get; }
+        [JsonIgnore]
+        public User ReceivedUser { set; get; }
+        public OfferAd OfferAd { set; get; }
+        public Dog Dog { set; get; }
 
         public RequestNotificationResponse ToResponse(DatabaseContext database)
         {

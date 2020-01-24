@@ -1,4 +1,5 @@
-﻿using OO_Backend.Enums;
+﻿using Newtonsoft.Json;
+using OO_Backend.Enums;
 using OO_Backend.Responses;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -10,7 +11,6 @@ namespace OO_Backend.Models
     {
         [Column("OfferNotificationId")]
         public int Id { get; set; }
-        [Required(ErrorMessage = "Send User Id is required")]
         public int SendUserId { get; set; }
         [Required(ErrorMessage = "Receive User Id is required")]
         public int ReceivedUserId { get; set; }
@@ -19,6 +19,11 @@ namespace OO_Backend.Models
         public NotificationStatus Status { get; set; }
         public DateTime PostDate { get; set; }
 
+        [JsonIgnore]
+        public User SendUser { get; set; }
+        [JsonIgnore]
+        public User ReceivedUser { get; set; }
+        public RequestAd RequestAd { get; set; }
 
         public OfferNotificationResponse ToResponse(DatabaseContext database)
         {

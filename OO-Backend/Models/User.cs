@@ -21,6 +21,8 @@ namespace OO_Backend.Models
         public float Rating { get; set; }
         public DateTime BirthDate { get; set; }
 
+        public virtual List<Dog> Dogs { set; get; }
+
 
         public ShortUserResponse ToShortResponse()
         {

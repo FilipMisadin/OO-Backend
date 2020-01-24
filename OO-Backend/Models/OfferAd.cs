@@ -1,4 +1,5 @@
-﻿using OO_Backend.Enums;
+﻿using Newtonsoft.Json;
+using OO_Backend.Enums;
 using OO_Backend.Responses;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -11,7 +12,6 @@ namespace OO_Backend.Models
     {
         [Column("OfferId")]
         public int Id { get; set; }
-        [Required(ErrorMessage = "User Id is required")]
         public int UserId { get; set; }
         public string Body { get; set; }
         public DateTime PostDate { get; set; }
@@ -19,6 +19,9 @@ namespace OO_Backend.Models
         public WeekDay DayAvailableTo { get; set; }
         public int HourAvailableFrom { get; set; }
         public int HourAvailableTo { get; set; }
+
+        [JsonIgnore]
+        public User User { set; get; }
 
 
         public OfferAdResponse ToResponse(DatabaseContext database)
